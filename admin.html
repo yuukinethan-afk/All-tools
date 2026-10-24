@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0015">
+<title>Admin Panel</title>
+<style>
+:root{--bg:#0a0015;--card:#150a26;--card2:#1d1033;--bd:#2f1d4d;--tx:#f3eaff;--mut:#a893c9;--p:#b266ff;--k:#ff5fa8;--err:#ff6b81;--ok:#34d399;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% -10%,#2a0f4d 0,transparent 45%),var(--bg);background-attachment:fixed;color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+main{max-width:640px;margin:0 auto;padding:22px 16px 48px}
+h1{margin:0;font-size:22px;background:linear-gradient(90deg,var(--p),var(--k));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:16px;margin:0 0 10px}
+.box{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--bd);border-radius:16px;padding:16px;margin-top:14px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px}
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--p)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.btn{border:0;padding:9px 14px;border-radius:10px;font:inherit;font-size:14px;cursor:pointer;color:#12001f;background:linear-gradient(90deg,var(--p),var(--k));font-weight:600}
+.btn.g{background:var(--card2);color:var(--tx);font-weight:400;border:1px solid var(--bd)}
+.btn.d{background:rgba(255,107,129,.15);color:var(--err);font-weight:400;border:1px solid rgba(255,107,129,.4)}
+.btn.s{padding:6px 10px;font-size:12px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.msg{margin-top:10px;font-size:13px;min-height:18px}.msg.e{color:var(--err)}.msg.o{color:var(--ok)}
+.it{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--bd)}
+.it:first-child{border-top:0}
+.th{width:48px;height:48px;border-radius:12px;flex:none;border:1px solid var(--bd);background:linear-gradient(145deg,rgba(178,102,255,.35),rgba(255,95,168,.22)) center/cover}
+.in{flex:1;min-width:0}.in b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.in span{display:block;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:130px}
+.pv{height:70px;border-radius:12px;margin-top:8px;border:1px solid var(--bd);background:linear-gradient(145deg,rgba(178,102,255,.35),rgba(255,95,168,.22)) center/cover}
+.hide{display:none}
+.empty{color:var(--mut);text-align:center;padding:14px 0}
+</style>
+</head>
+<body>
+<main>
+<!-- LOGIN -->
+<div id="vl" class="hide">
+  <h1 style="margin-top:40px">Admin Login</h1>
+  <p style="color:var(--mut);margin:4px 0 0">Masukkan sandi untuk mengelola tools.</p>
+  <div class="box">
+    <label for="pw">Sandi</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••">
+    <div class="btns"><button class="btn" id="lg">Masuk</button></div>
+    <div class="msg" id="lm"></div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="vp" class="hide">
+  <div class="hd"><h1>Admin Panel</h1><div class="btns" style="margin:0"><a class="btn g s" href="/" style="text-decoration:none;display:inline-block">Lihat situs</a><button class="btn g s" id="lo">Keluar</button></div></div>
+
+  <div class="box">
+    <h2 id="ft">Tambah tool</h2>
+    <label>Judul</label><input id="fn" maxlength="60" placeholder="Nama tool">
+    <label>URL tool</label><input id="fu" type="url" placeholder="https://tool-kamu.vercel.app">
+    <label>Gambar / background kartu (opsional)</label>
+    <input id="fb" placeholder="https://link-gambar.jpg atau linear-gradient(135deg,#7c3aed,#ec4899)">
+    <div class="pv" id="fp"></div>
+    <div class="row">
+      <div><label>Kategori</label><input id="fc" maxlength="20" value="Tools" list="cl"></div>
+      <div><label>Badge</label><input id="fg" maxlength="12" placeholder="LINK"></div>
+    </div>
+    <datalist id="cl"><option>Tools</option><option>Maker</option><option>Visual</option><option>Downloader</option></datalist>
+    <label>Deskripsi (opsional)</label><input id="fd" maxlength="140">
+    <div class="btns"><button class="btn" id="fs">Simpan tool</button><button class="btn g hide" id="fx">Batal edit</button></div>
+    <div class="msg" id="fm"></div>
+  </div>
+
+  <div class="box">
+    <h2>Daftar tool tambahan <span id="cn" style="color:var(--mut);font-weight:400"></span></h2>
+    <div id="ls"></div>
+    <p style="color:var(--mut);font-size:12px;margin:10px 0 0">Tool di sini tampil paling atas di hub, sesuai urutan. Tool bawaan di index.html tidak ikut dikelola dari sini.</p>
+  </div>
+</div>
+</main>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var list=[],edit=-1;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function api(path,opt){
+  return fetch(path,Object.assign({credentials:"same-origin",headers:{"Content-Type":"application/json"}},opt)).then(function(r){
+    return r.json().catch(function(){return{}}).then(function(j){if(!r.ok){var e=new Error(j.error||"Error "+r.status);e.status=r.status;throw e}return j})})
+}
+function say(id,t,k){var e=$(id);e.textContent=t||"";e.className="msg "+(k||"")}
+function view(v){$("vl").classList.toggle("hide",v!=="l");$("vp").classList.toggle("hide",v!=="p")}
+
+// ---- Login ----
+function login(){
+  say("lm","Memeriksa…");
+  api("/api/login",{method:"POST",body:JSON.stringify({password:$("pw").value})}).then(function(){$("pw").value="";openPanel()}).catch(function(e){say("lm",e.message,"e")})
+}
+$("lg").onclick=login;
+$("pw").onkeydown=function(e){if(e.key==="Enter")login()};
+$("lo").onclick=function(){api("/api/login",{method:"DELETE"}).finally(function(){list=[];view("l");say("lm","")})};
+
+// ---- Panel ----
+function openPanel(){
+  api("/api/tools").then(function(a){list=Array.isArray(a)?a:[];view("p");render();resetForm()}).catch(function(){view("l")})
+}
+function render(){
+  $("cn").textContent="("+list.length+")";
+  $("ls").innerHTML=list.length?list.map(function(t,i){
+    var th=t.bg?(/^(linear|radial)-gradient/.test(t.bg)?t.bg:"url('"+t.bg+"')"):"";
+    return '<div class="it"><div class="th"'+(th?' style="background:'+esc(th)+' center/cover"':'')+'></div><div class="in"><b>'+esc(t.n)+'</b><span>'+esc(t.c)+' · '+esc(t.u)+'</span></div><div class="ac">'
+    +'<button class="btn g s" data-a="up" data-i="'+i+'">Naik</button><button class="btn g s" data-a="dn" data-i="'+i+'">Turun</button><button class="btn g s" data-a="ed" data-i="'+i+'">Edit</button><button class="btn d s" data-a="rm" data-i="'+i+'">Hapus</button></div></div>'
+  }).join(""):'<div class="empty">Belum ada tool tambahan.</div>';
+}
+function persist(okMsg){
+  return api("/api/tools",{method:"POST",body:JSON.stringify(list)}).then(function(){say("fm",okMsg||"Tersimpan ✓","o")}).catch(function(e){
+    if(e.status===401){view("l");say("lm","Sesi habis, login lagi.","e")}else say("fm",e.message,"e");throw e})
+}
+$("ls").onclick=function(ev){
+  var b=ev.target.closest("button");if(!b)return;var i=+b.dataset.i,a=b.dataset.a,bak=list.slice();
+  if(a==="up"&&i>0){list.splice(i-1,0,list.splice(i,1)[0])}
+  else if(a==="dn"&&i<list.length-1){list.splice(i+1,0,list.splice(i,1)[0])}
+  else if(a==="rm"){if(!confirm("Hapus \""+list[i].n+"\"?"))return;list.splice(i,1);if(edit===i)resetForm()}
+  else if(a==="ed"){edit=i;var t=list[i];$("fn").value=t.n;$("fu").value=t.u;$("fb").value=t.bg||"";$("fc").value=t.c;$("fg").value=t.b;$("fd").value=t.d||"";
+    $("ft").textContent="Edit tool";$("fx").classList.remove("hide");prev();window.scrollTo({top:0,behavior:"smooth"});return}
+  else return;
+  render();persist().catch(function(){list=bak;render()})
+};
+function resetForm(){edit=-1;["fn","fu","fb","fg","fd"].forEach(function(i){$(i).value=""});$("fc").value="Tools";$("ft").textContent="Tambah tool";$("fx").classList.add("hide");prev()}
+$("fx").onclick=function(){resetForm();say("fm","")};
+function prev(){var b=$("fb").value.trim(),p=$("fp");
+  p.style.background=!b?"":/^(linear|radial)-gradient\(/.test(b)?b:/^(https?:|\/)/.test(b)?"url('"+b.replace(/'/g,"%27")+"') center/cover":"";
+  if(!b)p.style.background="linear-gradient(145deg,rgba(178,102,255,.35),rgba(255,95,168,.22))"}
+$("fb").oninput=prev;
+$("fs").onclick=function(){
+  var n=$("fn").value.trim(),u=$("fu").value.trim();
+  if(!n)return say("fm","Judul wajib diisi.","e");
+  if(!/^https?:\/\//i.test(u))return say("fm","URL harus diawali http:// atau https://","e");
+  var it={id:edit>-1?list[edit].id:(n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,30)+"-"+Math.random().toString(36).slice(2,6)),
+    n:n,u:u,bg:$("fb").value.trim(),c:$("fc").value.trim()||"Tools",b:$("fg").value.trim()||"LINK",d:$("fd").value.trim()};
+  var bak=list.slice();
+  if(edit>-1)list[edit]=it;else list.unshift(it);
+  say("fm","Menyimpan…");
+  persist(edit>-1?"Perubahan tersimpan ✓":"Tool ditambahkan ✓").then(function(){render();resetForm()}).catch(function(){list=bak;render()})
+};
+
+// ---- Start ----
+api("/api/login").then(function(j){if(j.ok)openPanel();else view("l")}).catch(function(){view("l");say("lm","API tidak tersedia. Pastikan sudah deploy di Vercel.","e")});
+</script>
+</body>
+</html>
