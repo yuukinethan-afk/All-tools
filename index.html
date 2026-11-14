@@ -294,6 +294,85 @@ var T=[
   e.querySelector('#am-back').onclick = () => {
     s1.classList.remove('hide');
     s2.classList.add('hide');
+{id:"am-unlocker",ic:"🎬",n:"AM Unlocker",d:"Buka premium Alight Motion via magic link.",b:"VIP",c:"Tools",vip:true,r:function(e){
+  e.innerHTML=`
+    <div style="text-align:center; margin-bottom: 20px;">
+      <h3 style="color:#ff7ab8; margin:0; font-size:22px; letter-spacing:1px;">Alight Motion</h3>
+      <p style="color:#bba8d8; font-size:13px; margin-top:4px;">Magic Link Activation</p>
+    </div>
+    
+    <div id="am-step1">
+      <label>Email Alight Motion</label>
+      <input id="am-em" type="email" placeholder="nama@email.com">
+      <button class="btn" id="am-b1" style="width:100%; margin-top:12px;">Kirim Link →</button>
+    </div>
+
+    <!-- GW TAMBAHIN style="display:none;" BIAR GAK MUNCUL DULUAN -->
+    <div id="am-step2" style="display:none; margin-top:16px;">
+      <label>Tempel Link Verifikasi dari Email</label>
+      <input id="am-lk" type="text" placeholder="https://...">
+      <div class="btns" style="margin-top:12px;">
+        <button class="btn g" id="am-back">← Kembali</button>
+        <button class="btn" id="am-b3">Verifikasi →</button>
+      </div>
+    </div>
+
+    <!-- GW TAMBAHIN style="display:none;" BIAR GAK MUNCUL DULUAN -->
+    <div id="am-res" style="display:none; margin-top:16px;">
+      <label style="color:#3ddc97;">Premium Aktif ✨</label>
+      <div class="res" id="am-tok" style="font-family:monospace; font-size:12px; word-break:break-all; border-color:#3ddc97;"></div>
+      <button class="btn" id="am-cp" style="width:100%; margin-top:12px;">Salin Token</button>
+    </div>
+    
+    <div id="am-msg" style="margin-top:12px; font-size:13px; font-weight:bold; text-align:center;"></div>
+  `;
+
+  const msg = e.querySelector('#am-msg');
+  const s1 = e.querySelector('#am-step1');
+  const s2 = e.querySelector('#am-step2');
+  const res = e.querySelector('#am-res');
+
+  const showMsg = (txt, isErr) => {
+    msg.textContent = txt;
+    msg.style.color = isErr ? '#ff7a7a' : '#3ddc97';
+  };
+
+  e.querySelector('#am-b1').onclick = async () => {
+    const em = e.querySelector('#am-em').value.trim();
+    if(!em.includes('@')) return showMsg('Email tidak valid!', true);
+    
+    const btn = e.querySelector('#am-b1');
+    btn.disabled = true; btn.textContent = 'Mengirim...';
+    showMsg('Menghubungi server...', false);
+    
+    try {
+      const r = await fetch('/api/am-tool', {
+        method: 'POST', 
+        headers: {'content-type':'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'send', email: em })
+      });
+      
+      const text = await r.text(); // Baca text dulu buat antisipasi error HTML
+      let j = {};
+      try { j = JSON.parse(text) } catch(e) { throw new Error('Respon server tidak valid'); }
+
+      if(j.success) {
+        showMsg('Link terkirim! Cek kotak masuk email.', false);
+        s1.style.display = 'none';
+        s2.style.display = 'block';
+      } else {
+        showMsg(j.message || 'Gagal mengirim link.', true);
+      }
+    } catch(err) {
+      showMsg('Server tidak merespon: ' + err.message, true);
+    }
+    btn.disabled = false; btn.textContent = 'Kirim Link →';
+  };
+
+  e.querySelector('#am-back').onclick = () => {
+    s1.style.display = 'block';
+    s2.style.display = 'none';
     msg.textContent = '';
   };
 
@@ -312,11 +391,15 @@ var T=[
         credentials: 'same-origin',
         body: JSON.stringify({ action: 'verify', email: e.querySelector('#am-em').value.trim(), magicLink: raw })
       });
-      const j = await r.json();
+      
+      const text = await r.text();
+      let j = {};
+      try { j = JSON.parse(text) } catch(e) { throw new Error('Respon server tidak valid'); }
+
       if(j.success) {
-        showMsg('', false);
-        s2.classList.add('hide');
-        res.classList.remove('hide');
+        showMsg('Verifikasi Berhasil!', false);
+        s2.style.display = 'none';
+        res.style.display = 'block';
         e.querySelector('#am-tok').textContent = j.data.idToken;
         
         e.querySelector('#am-cp').onclick = () => {
@@ -328,7 +411,7 @@ var T=[
         showMsg(j.message || 'Kode magic link tidak valid atau sudah terpakai.', true);
       }
     } catch(err) {
-      showMsg('Server tidak merespon.', true);
+      showMsg('Server tidak merespon: ' + err.message, true);
     }
     btn.disabled = false; btn.textContent = 'Verifikasi →';
   };
