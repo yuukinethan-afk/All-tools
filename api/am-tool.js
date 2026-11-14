@@ -31,6 +31,7 @@ const friendlyErr = errStr => {
   return errStr.length > 100 ? errStr.slice(0, 100) : errStr
 }
 
+// Fungsi Ekstrak OOB Code yang udah diperbaiki (Anti-gunting kode)
 function getOobCode(raw) {
   if (!raw) return null
   let s = String(raw).trim().replace(/&amp;/g, '&')
@@ -58,6 +59,22 @@ function getOobCode(raw) {
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store')
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method Not Allowed' })
+
+  // =========================================================
+  // 🛡️ PAGAR BACKEND VIP (Anti-bypass orang iseng)
+  // =========================================================
+  const cookies = req.headers.cookie || '';
+  
+  // PENTING: Ganti 'vip_session' dengan nama cookie yang dipakai sistem login lo.
+  // (Coba cek di Inspect Element > Application > Cookies pas lo lagi login VIP)
+  const isVip = cookies.includes('vip_session') || cookies.includes('token') || cookies.includes('auth');
+  
+  if (!isVip) {
+    return res.status(403).json({ 
+      success: false, 
+      message: 'Akses Ditolak. API ini khusus Member VIP.' 
+    });
+  }
 
   const { action, email, magicLink } = req.body
 
@@ -92,7 +109,7 @@ module.exports = async (req, res) => {
     if (!email || !magicLink) return res.status(400).json({ success: false, message: 'Email & link wajib diisi.' })
     
     const c = getOobCode(magicLink)
-    if (!c) return res.status(400).json({ success: false, message: 'Format link tidak valid.' })
+    if (!c) return res.status(400).json({ success: false, message: 'Format link tidak valid / terpotong.' })
 
     try {
       // 1. Login pakai OOB Code
@@ -142,7 +159,7 @@ module.exports = async (req, res) => {
           idToken,
           orderId,
           status: premiumStatus,
-          stats: { total: 150, today: 12 } // Statistik statis (karena Vercel nggak bisa nulis file)
+          stats: { total: 150, today: 12 } // Angka statis sementara
         }
       })
 
@@ -152,4 +169,4 @@ module.exports = async (req, res) => {
   }
 
   return res.status(400).json({ success: false, message: 'Aksi tidak dikenal.' })
-}
+                                                           }
