@@ -108,7 +108,20 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--p)}
 <script>
 var $=function(i){return document.getElementById(i)};
 var list=[],over={},edit=-1,bi=null;
-var BUILTIN=[["finder-preset","Finder Preset"],["kata","Hitung Kata"],["huruf","Ubah Huruf"],["sandi","Password Generator"],["json","JSON Formatter"],["b64","Base64"],["avatar","Avatar Studio"],["quote","Quote Maker"],["kompres","Kompres Gambar"],["gradient","Gradient Generator"],["warna","Konversi Warna"]];
+var BUILTIN=[
+  ["am-unlocker","AM Unlocker"],
+  ["finder-preset","Finder Preset"],
+  ["kata","Hitung Kata"],
+  ["huruf","Ubah Huruf"],
+  ["sandi","Password Generator"],
+  ["json","JSON Formatter"],
+  ["b64","Base64"],
+  ["avatar","Avatar Studio"],
+  ["quote","Quote Maker"],
+  ["kompres","Kompres Gambar"],
+  ["gradient","Gradient Generator"],
+  ["warna","Konversi Warna"]
+];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function api(path,opt){
   return fetch(path,Object.assign({credentials:"same-origin",headers:{"Content-Type":"application/json"}},opt)).then(function(r){
@@ -139,6 +152,7 @@ function render(){
     return '<div class="it"><div class="th"'+(th?' style="background:'+esc(th)+'"':'')+'></div><div class="in"><b>'+esc(t.n)+(t.vip?' <span class="pill on">VIP</span>':'')+'</b><span>'+esc(t.c)+' · '+esc(t.u)+'</span></div><div class="ac">'
     +'<button class="btn g s" data-a="up" data-i="'+i+'">Naik</button><button class="btn g s" data-a="dn" data-i="'+i+'">Turun</button><button class="btn g s" data-a="ed" data-i="'+i+'">Edit</button><button class="btn d s" data-a="rm" data-i="'+i+'">Hapus</button></div></div>'
   }).join(""):'<div class="empty">Belum ada tool tambahan.</div>';
+  
   $("bl").innerHTML=BUILTIN.map(function(b){
     var o=over[b[0]]||{},th=bgCss(o.bg);
     return '<div class="it"><div class="th"'+(th?' style="background:'+esc(th)+'"':'')+'></div><div class="in"><b>'+esc(o.n||b[1])+(o.vip?' <span class="pill on">VIP</span>':'')+'</b><span>'+(o.hide?"Disembunyikan":"Tampil")+(o.n||o.bg?" · diubah":"")+'</span></div><div class="ac"><button class="btn g s" data-b="'+b[0]+'">Edit</button></div></div>'
