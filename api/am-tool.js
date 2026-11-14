@@ -57,14 +57,7 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method Not Allowed' })
 
-  // 🛡️ PAGAR VIP: Ngecek semua kemungkinan nama cookie
-  const cookies = req.headers.cookie || '';
-  const isVip = cookies.includes('vip_session') || cookies.includes('token') || cookies.includes('auth') || cookies.includes('vip_key') || cookies.includes('kunci');
   
-  if (!isVip) {
-    return res.status(403).json({ success: false, message: 'Akses Ditolak. API ini khusus Member VIP.' });
-  }
-
   const { action, email, magicLink } = req.body
 
   if (action === 'send') {
