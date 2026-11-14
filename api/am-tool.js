@@ -1,4 +1,3 @@
-const axios = require('axios')
 const crypto = require('crypto')
 
 const key = 'AIzaSyDtG1AU22ErnQD60AzBAcaknySiz9_CEq0'
@@ -27,22 +26,14 @@ const friendlyErr = errStr => {
   if (!errStr) return 'Terjadi kesalahan autentikasi.'
   if (errStr.includes('INVALID_OOB_CODE')) return 'Kode magic link tidak valid atau sudah pernah digunakan.'
   if (errStr.includes('EXPIRED_OOB_CODE')) return 'Magic link telah kadaluarsa. Kirim ulang tautan baru.'
-  if (errStr.includes('INVALID_EMAIL')) return 'Format email tidak valid.'
   return errStr.length > 100 ? errStr.slice(0, 100) : errStr
 }
 
-// Fungsi Ekstrak OOB Code yang udah diperbaiki (Anti-gunting kode)
 function getOobCode(raw) {
   if (!raw) return null
   let s = String(raw).trim().replace(/&amp;/g, '&')
   try {
     const u = new URL(s)
-    let c = u.searchParams.get('oobCode')
-    if (c) return c
-  } catch (e) {}
-  try {
-    const decoded = decodeURIComponent(s)
-    const u = new URL(decoded)
     let c = u.searchParams.get('oobCode')
     if (c) return c
   } catch (e) {}
@@ -57,54 +48,53 @@ function getOobCode(raw) {
 }
 
 module.exports = async (req, res) => {
-  res.setHeader('Cache-Control', 'no-store')
+  // CORS Header biar aman
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS,POST')
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version')
+
+  if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method Not Allowed' })
 
-  // =========================================================
-  // 🛡️ PAGAR BACKEND VIP (Anti-bypass orang iseng)
-  // =========================================================
+  // 🛡️ PAGAR VIP: Ngecek semua kemungkinan nama cookie
   const cookies = req.headers.cookie || '';
-  
-  // PENTING: Ganti 'vip_session' dengan nama cookie yang dipakai sistem login lo.
-  // (Coba cek di Inspect Element > Application > Cookies pas lo lagi login VIP)
-  const isVip = cookies.includes('vip_session') || cookies.includes('token') || cookies.includes('auth');
+  const isVip = cookies.includes('vip_session') || cookies.includes('token') || cookies.includes('auth') || cookies.includes('vip_key') || cookies.includes('kunci');
   
   if (!isVip) {
-    return res.status(403).json({ 
-      success: false, 
-      message: 'Akses Ditolak. API ini khusus Member VIP.' 
-    });
+    return res.status(403).json({ success: false, message: 'Akses Ditolak. API ini khusus Member VIP.' });
   }
 
   const { action, email, magicLink } = req.body
 
-  // ==========================================
-  // AKSI 1: KIRIM LINK KE EMAIL
-  // ==========================================
   if (action === 'send') {
     if (!email || !email.includes('@')) return res.status(400).json({ success: false, message: 'Email tidak valid.' })
     
     try {
-      await axios.post(`${idt}/getOobConfirmationCode?key=${key}`, {
-        requestType: 6,
-        email: email.trim().toLowerCase(),
-        androidInstallApp: true,
-        canHandleCodeInApp: true,
-        continueUrl: 'https://alightcreative.com?ui_sid=0366624874&ui_sd=0',
-        iosBundleId: 'com.alightcreative.motion',
-        androidPackageName: 'com.alightcreative.motion',
-        androidMinimumVersion: '585',
-        clientType: 'CLIENT_TYPE_ANDROID'
-      }, { headers: h1 })
+      const r = await fetch(`${idt}/getOobConfirmationCode?key=${key}`, {
+        method: 'POST',
+        headers: h1,
+        body: JSON.stringify({
+          requestType: 6,
+          email: email.trim().toLowerCase(),
+          androidInstallApp: true,
+          canHandleCodeInApp: true,
+          continueUrl: 'https://alightcreative.com?ui_sid=0366624874&ui_sd=0',
+          iosBundleId: 'com.alightcreative.motion',
+          androidPackageName: 'com.alightcreative.motion',
+          androidMinimumVersion: '585',
+          clientType: 'CLIENT_TYPE_ANDROID'
+        })
+      });
+      const data = await r.json();
+      if (!r.ok) throw { response: { data } }; // Lempar error kalau Firebase nolak
+      
       return res.json({ success: true, message: 'Link terkirim.' })
     } catch (e) {
       return res.status(400).json({ success: false, message: friendlyErr(bad(e)) })
     }
   }
 
-  // ==========================================
-  // AKSI 2: VERIFIKASI LINK
-  // ==========================================
   if (action === 'verify') {
     if (!email || !magicLink) return res.status(400).json({ success: false, message: 'Email & link wajib diisi.' })
     
@@ -113,14 +103,20 @@ module.exports = async (req, res) => {
 
     try {
       // 1. Login pakai OOB Code
-      const a = await axios.post(`${idt}/emailLinkSignin?key=${key}`, {
-        email: email.trim().toLowerCase(), 
-        oobCode: c, 
-        clientType: 'CLIENT_TYPE_ANDROID'
-      }, { headers: h1 })
+      const aRes = await fetch(`${idt}/emailLinkSignin?key=${key}`, {
+        method: 'POST',
+        headers: h1,
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(), 
+          oobCode: c, 
+          clientType: 'CLIENT_TYPE_ANDROID'
+        })
+      });
+      const aData = await aRes.json();
+      if (!aRes.ok) throw { response: { data: aData } };
       
-      const idToken = a.data.idToken
-      const uid = a.data.localId
+      const idToken = aData.idToken
+      const uid = aData.localId
 
       // 2. Klaim Premium
       const o = 'ningen-' + crypto.randomBytes(6).toString('hex')
@@ -132,7 +128,7 @@ module.exports = async (req, res) => {
           orderId: o
         }
       }
-      const h = {
+      const hVip = {
         ...h2,
         authorization: 'Bearer ' + idToken,
         'firebase-instance-id-token': 'cSDnCyp3T-uwp07z3tL86T:APA91bFkmvvsHw5nnqa1SBFci-99DRsKClLiETdRrVcJjS5yBx1v_FbCb1d8WhBuea_zmwnYBktyTIzcRhN4b6uNOUur9wPc0gKXmJDoZic0LhNq5V2s0xI'
@@ -142,25 +138,20 @@ module.exports = async (req, res) => {
       let orderId = null
       
       try {
-        const p = await axios.post(vfy, b, { headers: h })
-        if (p.data) {
+        const pRes = await fetch(vfy, {
+          method: 'POST',
+          headers: hVip,
+          body: JSON.stringify(b)
+        });
+        if (pRes.ok) {
           premiumStatus = 'ACTIVE'
           orderId = o
         }
-      } catch (e) {
-        console.log('Premium claim failed:', bad(e))
-      }
+      } catch (e) { console.log('Premium fail:', e) }
 
       return res.json({
         success: true,
-        data: {
-          email,
-          uid,
-          idToken,
-          orderId,
-          status: premiumStatus,
-          stats: { total: 150, today: 12 } // Angka statis sementara
-        }
+        data: { email, uid, idToken, orderId, status: premiumStatus }
       })
 
     } catch (e) {
@@ -169,4 +160,4 @@ module.exports = async (req, res) => {
   }
 
   return res.status(400).json({ success: false, message: 'Aksi tidak dikenal.' })
-                                                           }
+        }
