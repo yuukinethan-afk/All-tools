@@ -270,6 +270,23 @@
 <script>
   const $ = i => document.getElementById(i)
 
+  /* =======================================================
+     🛡️ PAGAR VIP (Mencegah orang bypass lewat URL)
+     ======================================================= */
+  // Kita tanya ke sistem API lo, "Ini orang VIP bukan?"
+  fetch('/api/vip', { credentials: 'same-origin' })
+    .then(res => {
+      if (!res.ok) {
+        // Kalau bukan VIP, tendang ke halaman utama
+        alert('Akses Ditolak! Halaman ini khusus Member VIP. Silakan masuk lewat halaman depan.');
+        window.location.href = '/';
+      }
+    })
+    .catch(() => {
+      // Kalau error (misal server mati), tendang juga
+      window.location.href = '/';
+    });
+
   /* ---------- Theme Toggle ---------- */
   const tt = $('theme-toggle')
   const root = document.documentElement
@@ -290,10 +307,6 @@
       localStorage.setItem('theme', 'dark')
     }
   }
-
-  /* ---------- Dummy Stats Fetch (Biar nggak error) ---------- */
-  // Karena API stats lama belum tentu ada di file baru, kita biarin "-" aja dulu
-  // Kalau mau nanti bisa disambungin ke database beneran.
 
   /* ---------- Step Flow ---------- */
   const stepLabels = { 1: '01 · email', 2: '02 · link', 3: '03 · done ✨' }
@@ -321,7 +334,6 @@
     const b = $('b1'); busy(b, true, 'mengirim...')
     
     try {
-      // Panggil API BARU (am-tool)
       const r = await fetch('/api/am-tool', { 
         method: 'POST', 
         headers: {'content-type':'application/json'}, 
@@ -350,7 +362,6 @@
     const b = $('b3'); busy(b, true, 'verifikasi...')
     
     try {
-      // Panggil API BARU (am-tool)
       const r = await fetch('/api/am-tool', { 
         method: 'POST', 
         headers: {'content-type':'application/json'}, 
