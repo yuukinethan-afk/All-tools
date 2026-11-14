@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a0b2e">
+<title>Ningen Tools</title>
+<meta name="description" content="Kumpulan tools Ningen: maker dan utilitas web.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff7ab8'/%3E%3Ctext x='50' y='70' font-size='62' font-weight='800' text-anchor='middle' fill='%232a0a1c' font-family='sans-serif'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;800&family=Cormorant+Garamond:wght@600&family=Quicksand:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#1a0b2e;--card:#251240;--card2:#331a57;--bd:#46296b;--tx:#fff4e8;--mut:#bba8d8;--p:#ff7ab8;--k:#ff7ab8;--e:cubic-bezier(.2,.8,.2,1);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--tx);font:16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;
+  background:
+    radial-gradient(170vmax 170vmax at 2% 0%, rgba(255,122,184,.56), transparent 72%),
+    radial-gradient(180vmax 180vmax at 100% 4%, rgba(82,184,255,.48), transparent 72%),
+    radial-gradient(190vmax 190vmax at 0% 100%, rgba(61,220,151,.4), transparent 72%),
+    radial-gradient(175vmax 175vmax at 100% 100%, rgba(255,154,61,.44), transparent 72%),
+    radial-gradient(220vmax 220vmax at 50% 48%, rgba(123,77,255,.5), transparent 76%),
+    var(--bg);
+  background-repeat:no-repeat}
+main{position:relative;max-width:760px;margin:0 auto;padding:22px 16px 56px;overflow-x:clip}
+h1{margin:0;font-size:clamp(15px,4.8vw,23px);line-height:1.08;font-weight:800;letter-spacing:-.01em}
+header{position:relative;z-index:1;margin-bottom:6px;padding:22px 0 0;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.digi{font:700 clamp(17px,5.4vw,25px)/1 "Cormorant Garamond",Georgia,serif;color:#ffe8b0;letter-spacing:.06em;text-shadow:0 0 10px rgba(230,201,138,.5);white-space:nowrap;text-align:right}
+.digi .cl{animation:cblink 1s step-start infinite}
+.digi .dt{display:block;margin-top:2px;font:600 11px/1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+@keyframes cblink{50%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.digi .cl{animation:none}}
+.bar{position:relative;z-index:3;display:flex;gap:8px;margin:6px 0 12px}
+.roleline{position:relative;z-index:3;display:flex;justify-content:flex-end;margin-bottom:2px}
+.roletag{font:700 11px/1 "Bricolage Grotesque",sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px 5px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;background:var(--card2);color:var(--mut);border:1px solid var(--bd)}
+.roletag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.roletag.r-owner{color:#ffe08a;border-color:rgba(255,224,138,.5);background:rgba(255,224,138,.1)}
+.roletag.r-vip{color:#ff9ad6;border-color:rgba(255,154,214,.5);background:rgba(255,154,214,.1)}
+.roletag.r-visitor{color:var(--mut)}
+#q{flex:1;min-width:0;padding:14px 16px;border-radius:16px;border:0;background:var(--card);color:var(--tx);font:inherit}
+#q::placeholder{color:var(--mut)}
+#q:focus-visible,.btn:focus-visible,#seg button:focus-visible,.x:focus-visible,#sz:focus-visible{outline:3px solid var(--tx);outline-offset:2px}
+.btn{border:0;padding:11px 18px;border-radius:14px;font:inherit;font-weight:700;background:var(--p);color:#2a0a1c;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.g{background:var(--card2);color:var(--tx);font-weight:600}
+.btn:active{transform:scale(.97)}
+h1{color:#ffd976}
+.hero .word{display:inline-flex}
+.hero .ltr,.tls{display:inline-block;will-change:opacity;color:#ffe07a;
+  text-shadow:0 0 6px rgba(255,217,118,.9),0 0 16px rgba(255,180,60,.75),0 0 30px rgba(255,140,40,.55);
+  animation:neonPulse 2.6s ease-in-out infinite}
+.hero .ltr{transition:transform .12s var(--e)}
+.hero .ltr:nth-child(1){animation-delay:0s}.hero .ltr:nth-child(2){animation-delay:.1s}
+.hero .ltr:nth-child(3){animation-delay:.2s}.hero .ltr:nth-child(4){animation-delay:.3s}
+.hero .ltr:nth-child(5){animation-delay:.4s}.hero .ltr:nth-child(6){animation-delay:.5s}
+.tls{animation-delay:.6s}
+@keyframes neonPulse{0%,100%{opacity:.82}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.hero .ltr,.tls{animation:none;opacity:1}}
+#seg{position:relative;z-index:3;display:flex;gap:6px;overflow-x:auto;background:transparent;border-radius:999px;padding:2px;scrollbar-width:none}
+#seg::-webkit-scrollbar{display:none}
+#seg .ind{display:none}
+#seg button{position:relative;z-index:1;flex:none;border:1.5px solid var(--cc,var(--bd));background:color-mix(in srgb,var(--cc,var(--bd)) 14%,transparent);color:var(--cc,var(--mut));padding:9px 16px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s,transform .12s var(--e)}
+#seg button:active{transform:scale(.95)}
+#seg button.on{background:var(--cc,var(--tx));color:var(--cb,var(--bg));box-shadow:0 0 0 1px var(--cc,var(--tx)),0 6px 18px -6px var(--cc,var(--tx))}
+#seg button small{opacity:.75;font-weight:600;margin-left:3px}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 12px;color:var(--mut);font-size:14px}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:720px){#grid{grid-template-columns:repeat(4,1fr);gap:12px}}
+.c{position:relative;aspect-ratio:.72;border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(160deg,var(--card2),var(--card));color:var(--tx);cursor:pointer;overflow:hidden;user-select:none;-webkit-user-select:none;border:2px solid var(--tile);box-shadow:0 0 0 1px rgba(0,0,0,.25) inset,0 10px 22px -12px var(--tile);transition:transform .14s var(--e),box-shadow .2s}
+.c:active{transform:scale(.96)}
+.c:focus-visible{outline:3px solid var(--tx);outline-offset:3px}
+.c::before{content:"";position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--tile);opacity:.9}
+.c::after{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.08);border-radius:10px;pointer-events:none}
+.c.im{color:#fff}
+.c.im .ph{position:absolute;inset:0;background:var(--img) center/cover;opacity:.3}
+.c.im .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,4,26,.1) 20%,rgba(14,4,26,.88))}
+.c>*:not(.ph){position:relative}
+.c .tg{align-self:flex-start;max-width:64%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.02em;padding:3px 9px;border-radius:999px;color:var(--bg);background:var(--tile)}
+.c h3{margin:0;font-size:clamp(13px,4vw,17px);line-height:1.15;font-weight:800;letter-spacing:-.03em;overflow-wrap:anywhere;hyphens:auto;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.c .rb{position:absolute;top:13px;right:-30px;width:118px;text-align:center;transform:rotate(43deg);font:800 10px/1.9 "Bricolage Grotesque",sans-serif;letter-spacing:.14em;color:#2a1a00;background:linear-gradient(90deg,#ffe08a,#f0b545);box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:2}
+.c .rb.ok{background:linear-gradient(90deg,#d8c08a,#8d7247);color:#2a1a00;opacity:.92}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.96)}}
+#grid.intro .c{animation:rise .5s var(--e) both;animation-delay:calc(var(--i)*38ms)}
+.empty{grid-column:1/-1;text-align:center;padding:36px 8px;color:var(--mut)}
+.empty p{margin:0 0 14px}
+footer{margin-top:34px;color:var(--mut);font-size:13px}
+#ts{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .25s var(--e);z-index:20;white-space:nowrap}
+#ts.on{opacity:1;transform:translate(-50%,0)}
+#dim{position:fixed;inset:0;background:rgba(10,3,20,.62);opacity:0;pointer-events:none;transition:opacity .3s;z-index:8}
+#dim.on{opacity:1;pointer-events:auto}
+#sh{position:fixed;z-index:9;display:none;overflow:hidden;background:var(--tile,var(--card));transition:left .4s var(--e),top .4s var(--e),width .4s var(--e),height .4s var(--e),border-radius .4s var(--e),background-color .3s}
+#sh.on{display:block}
+#sh.nt{transition:none}
+#sh.full{background:var(--card)}
+#shin{height:100%;overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px));opacity:0;transition:opacity .18s}
+#sh.full #shin{opacity:1;transition-delay:.2s}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.sh h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em}
+.x{border:0;background:var(--card2);color:var(--tx);padding:9px 16px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer;flex:none}
+#mb label{display:block;font-size:13px;color:var(--mut);margin:12px 0 5px}
+#mb input,#mb textarea,#mb select{width:100%;padding:11px 12px;border-radius:12px;border:1.5px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+#mb input:focus,#mb textarea:focus,#mb select:focus{outline:2px solid var(--p);outline-offset:1px}
+#mb input[type=color]{height:48px;padding:3px}
+#mb input[type=range]{padding:0;accent-color:var(--p)}
+#mb input[type=checkbox]{accent-color:var(--p)}
+#mb textarea{min-height:130px;resize:vertical}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.res{margin-top:12px;padding:12px;border-radius:12px;background:var(--bg);border:1.5px dashed var(--bd);word-break:break-all;white-space:pre-wrap;min-height:46px;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.stats div{background:var(--bg);border-radius:12px;padding:10px 4px;text-align:center}
+.stats b{display:block;font-size:20px}.stats span{font-size:11px;color:var(--mut)}
+.pv{margin-top:12px;display:flex;justify-content:center}
+.pv svg,.pv canvas,.pv img{max-width:100%;height:auto;border-radius:14px}
+.gp{height:90px;border-radius:14px;margin-top:10px}
+
+#ld{position:absolute;inset:0;z-index:2;display:none;flex-direction:column;justify-content:flex-end;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,rgba(10,3,20,.55) 40%,var(--bg) 78%)}
+.ldc{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:16px;z-index:2}
+.ldc.on{display:flex}
+.ldc .ring{position:relative;width:66px;height:66px}
+.ldc .ring i{position:absolute;inset:0;border-radius:50%;border:3px solid transparent;border-top-color:var(--tile);animation:ldspin 1s linear infinite}
+.ldc .ring i:nth-child(2){inset:10px;border-top-color:transparent;border-right-color:var(--tile);opacity:.6;animation-duration:1.4s;animation-direction:reverse}
+.ldc .dot{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:var(--tile);box-shadow:0 0 12px var(--tile);animation:ldpulse 1s ease-in-out infinite}
+.ldc .lbl{font-size:12.5px;color:var(--mut);letter-spacing:.03em}
+@keyframes ldspin{to{transform:rotate(360deg)}}
+@keyframes ldpulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.85)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.ldc .ring i,.ldc .dot{animation:none}}
+#ld.on{display:flex}
+#ld .pc{font-size:13px;color:var(--mut);margin-bottom:8px;display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+#ld .pb{height:8px;border-radius:999px;background:var(--card2);overflow:hidden}
+#ld .pf{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--p),#ffd23d);transition:width .18s linear}
+#ld .lg{margin-top:10px;max-height:72px;overflow:hidden;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#ld .lg span{display:block;opacity:0;animation:lgin .25s forwards}
+#ld .lg span.ok{color:#3ddc97}
+@keyframes lgin{to{opacity:1}}
+#mb{position:relative}
+
+#bl{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 38%,#2a1140 0%,#140726 55%,#0a0315 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .6s var(--e),visibility .6s}
+#bl.gone{opacity:0;visibility:hidden;pointer-events:none}
+#bl .face{position:relative;width:164px;height:164px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#2e2016,#120c08 72%);box-shadow:0 0 0 2px #7a5a2e,0 0 0 7px #0a0315,inset 0 0 18px rgba(0,0,0,.6),0 0 34px rgba(201,161,94,.18)}
+#bl .face::before{content:"";position:absolute;inset:11px;border-radius:50%;border:1px solid rgba(201,161,94,.35)}
+#bl .num{position:absolute;left:50%;top:50%;font:600 13px/1 "Cormorant Garamond",Georgia,serif;color:#d9b876;letter-spacing:.02em;transform-origin:0 0}
+#bl .tick{position:absolute;left:50%;top:50%;width:1px;height:6px;background:rgba(201,161,94,.35);transform-origin:0 0}
+#bl .hand{position:absolute;left:50%;top:50%;background:#e9d4a3;border-radius:3px;transform-origin:50% 100%}
+#bl .hr{width:4px;height:42px;margin:-42px 0 0 -2px;background:#d9b876;animation:spinH 2.6s linear infinite}
+#bl .mn{width:3px;height:58px;margin:-58px 0 0 -1.5px;animation:spinM 1.3s linear infinite}
+#bl .sc{width:1.4px;height:64px;margin:-64px 0 0 -.7px;background:#ff7ab8;animation:spinS 1.9s steps(60) infinite}
+#bl .pin{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#e9d4a3;box-shadow:0 0 6px rgba(233,212,163,.8)}
+@keyframes spinH{to{transform:rotate(360deg)}}
+@keyframes spinM{to{transform:rotate(360deg)}}
+@keyframes spinS{to{transform:rotate(360deg)}}
+#bl .brand{font:800 26px/1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.06em;color:#f3eaff}
+#bl .tx{font-size:12px;letter-spacing:.16em;color:#a08bc9;text-transform:uppercase}
+#bl .tx b{color:#e9d4a3;font-variant-numeric:tabular-nums}
+
+.hero{position:relative;z-index:1;display:inline-block}
+.hero .cwrap{position:absolute;left:64%;top:66%;width:660%;height:660%;transform:translate(-50%,-50%) rotate(0deg);z-index:0;pointer-events:none;transition:transform .25s var(--e);filter:drop-shadow(0 0 20px rgba(230,201,138,.6));animation:clockGlow 2.6s ease-in-out infinite}
+@keyframes clockGlow{0%,100%{opacity:.82}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.hero .cwrap{animation:none;opacity:.95}}
+.hero .cwrap svg{width:100%;height:100%;display:block}
+.hero .cnum{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;fill:#ffe8b0}
+.hero .ctick{stroke:#ffe8b0;stroke-width:1.3;opacity:.75}
+.hero .cring{fill:none;stroke:#ffe8b0;stroke-width:1.5;opacity:.8}
+.hero .chand{stroke-linecap:round;transform-origin:150px 150px}
+.hero .chand.hr{stroke:#ffe8b0;stroke-width:5.5}
+.hero .chand.mn{stroke:#fff2cf;stroke-width:3.8}
+.hero .chand.sc{stroke:var(--p);stroke-width:1.6}
+.hero .cpin{fill:#fff2cf}
+.hero .word{position:relative;cursor:pointer}
+.hero.pulse .cwrap{animation:heroPulse .5s var(--e)}
+@keyframes heroPulse{0%{transform:translate(-50%,-50%) rotate(var(--rot,0deg)) scale(1)}35%{transform:translate(-50%,-50%) rotate(var(--rot,0deg)) scale(1.07)}100%{transform:translate(-50%,-50%) rotate(var(--rot,0deg)) scale(1)}}
+@media(prefers-reduced-motion:reduce){.hero .cwrap{transition:none}.hero.pulse .cwrap{animation:none}}
+@media(prefers-reduced-motion:reduce){#bl{transition:none}#bl.gone{display:none}}
+.vipgate{text-align:center;padding:36px 6px 6px}
+.vipgate .vi{display:inline-block;font:800 12px/1 "Bricolage Grotesque",sans-serif;letter-spacing:.2em;color:#2a1a00;background:linear-gradient(90deg,#ffe08a,#f0b545);padding:8px 16px;border-radius:999px;margin-bottom:16px}
+.vipgate p{color:var(--mut);font-size:14px;margin:0 0 16px}
+.vipgate input{text-align:center;letter-spacing:.14em;font-size:16px;text-transform:uppercase}
+.vipgate .er{color:#ff7a7a;font-size:13px;min-height:18px;margin-top:8px}
+@media(prefers-reduced-motion:reduce){*,*::before{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-delay:0s!important}}
+</style>
+</head>
+<body>
+<div id="bl" aria-hidden="true"><div class="face"><span class="tick" style="transform:rotate(6deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(12deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(18deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(24deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(36deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(42deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(48deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(54deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(66deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(72deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(78deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(84deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(96deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(102deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(108deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(114deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(126deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(132deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(138deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(144deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(156deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(162deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(168deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(174deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(186deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(192deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(198deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(204deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(216deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(222deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(228deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(234deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(246deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(252deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(258deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(264deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(276deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(282deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(288deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(294deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(306deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(312deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(318deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(324deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(336deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(342deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(348deg) translateY(-78px)"></span><span class="tick" style="transform:rotate(354deg) translateY(-78px)"></span><span class="num" style="transform:rotate(0deg) translate(0,-70px) rotate(0deg) translate(-50%,-50%)">XII</span><span class="num" style="transform:rotate(30deg) translate(0,-70px) rotate(-30deg) translate(-50%,-50%)">I</span><span class="num" style="transform:rotate(60deg) translate(0,-70px) rotate(-60deg) translate(-50%,-50%)">II</span><span class="num" style="transform:rotate(90deg) translate(0,-70px) rotate(-90deg) translate(-50%,-50%)">III</span><span class="num" style="transform:rotate(120deg) translate(0,-70px) rotate(-120deg) translate(-50%,-50%)">IIII</span><span class="num" style="transform:rotate(150deg) translate(0,-70px) rotate(-150deg) translate(-50%,-50%)">V</span><span class="num" style="transform:rotate(180deg) translate(0,-70px) rotate(-180deg) translate(-50%,-50%)">VI</span><span class="num" style="transform:rotate(210deg) translate(0,-70px) rotate(-210deg) translate(-50%,-50%)">VII</span><span class="num" style="transform:rotate(240deg) translate(0,-70px) rotate(-240deg) translate(-50%,-50%)">VIII</span><span class="num" style="transform:rotate(270deg) translate(0,-70px) rotate(-270deg) translate(-50%,-50%)">IX</span><span class="num" style="transform:rotate(300deg) translate(0,-70px) rotate(-300deg) translate(-50%,-50%)">X</span><span class="num" style="transform:rotate(330deg) translate(0,-70px) rotate(-330deg) translate(-50%,-50%)">XI</span><div class="hand hr"></div><div class="hand mn"></div><div class="hand sc"></div><div class="pin"></div></div><div class="brand">NINGEN</div><div class="tx">Memuat <b id="blp">0%</b></div></div>
+<main>
+<header>
+  <h1><span class="hero" id="hero"><span class="cwrap" id="cwrap"><svg viewBox="0 0 300 300" aria-hidden="true"><circle class="cring" cx="150" cy="150" r="144"/><line class="ctick" x1="150.0" y1="14.0" x2="150.0" y2="32.0"/><line class="ctick" x1="164.2" y1="14.7" x2="163.2" y2="24.7"/><line class="ctick" x1="178.3" y1="17.0" x2="176.2" y2="26.8"/><line class="ctick" x1="192.0" y1="20.7" x2="188.9" y2="30.2"/><line class="ctick" x1="205.3" y1="25.8" x2="201.2" y2="34.9"/><line class="ctick" x1="218.0" y1="32.2" x2="209.0" y2="47.8"/><line class="ctick" x1="229.9" y1="40.0" x2="224.1" y2="48.1"/><line class="ctick" x1="241.0" y1="48.9" x2="234.3" y2="56.4"/><line class="ctick" x1="251.1" y1="59.0" x2="243.6" y2="65.7"/><line class="ctick" x1="260.0" y1="70.1" x2="251.9" y2="75.9"/><line class="ctick" x1="267.8" y1="82.0" x2="252.2" y2="91.0"/><line class="ctick" x1="274.2" y1="94.7" x2="265.1" y2="98.8"/><line class="ctick" x1="279.3" y1="108.0" x2="269.8" y2="111.1"/><line class="ctick" x1="283.0" y1="121.7" x2="273.2" y2="123.8"/><line class="ctick" x1="285.3" y1="135.8" x2="275.3" y2="136.8"/><line class="ctick" x1="286.0" y1="150.0" x2="268.0" y2="150.0"/><line class="ctick" x1="285.3" y1="164.2" x2="275.3" y2="163.2"/><line class="ctick" x1="283.0" y1="178.3" x2="273.2" y2="176.2"/><line class="ctick" x1="279.3" y1="192.0" x2="269.8" y2="188.9"/><line class="ctick" x1="274.2" y1="205.3" x2="265.1" y2="201.2"/><line class="ctick" x1="267.8" y1="218.0" x2="252.2" y2="209.0"/><line class="ctick" x1="260.0" y1="229.9" x2="251.9" y2="224.1"/><line class="ctick" x1="251.1" y1="241.0" x2="243.6" y2="234.3"/><line class="ctick" x1="241.0" y1="251.1" x2="234.3" y2="243.6"/><line class="ctick" x1="229.9" y1="260.0" x2="224.1" y2="251.9"/><line class="ctick" x1="218.0" y1="267.8" x2="209.0" y2="252.2"/><line class="ctick" x1="205.3" y1="274.2" x2="201.2" y2="265.1"/><line class="ctick" x1="192.0" y1="279.3" x2="188.9" y2="269.8"/><line class="ctick" x1="178.3" y1="283.0" x2="176.2" y2="273.2"/><line class="ctick" x1="164.2" y1="285.3" x2="163.2" y2="275.3"/><line class="ctick" x1="150.0" y1="286.0" x2="150.0" y2="268.0"/><line class="ctick" x1="135.8" y1="285.3" x2="136.8" y2="275.3"/><line class="ctick" x1="121.7" y1="283.0" x2="123.8" y2="273.2"/><line class="ctick" x1="108.0" y1="279.3" x2="111.1" y2="269.8"/><line class="ctick" x1="94.7" y1="274.2" x2="98.8" y2="265.1"/><line class="ctick" x1="82.0" y1="267.8" x2="91.0" y2="252.2"/><line class="ctick" x1="70.1" y1="260.0" x2="75.9" y2="251.9"/><line class="ctick" x1="59.0" y1="251.1" x2="65.7" y2="243.6"/><line class="ctick" x1="48.9" y1="241.0" x2="56.4" y2="234.3"/><line class="ctick" x1="40.0" y1="229.9" x2="48.1" y2="224.1"/><line class="ctick" x1="32.2" y1="218.0" x2="47.8" y2="209.0"/><line class="ctick" x1="25.8" y1="205.3" x2="34.9" y2="201.2"/><line class="ctick" x1="20.7" y1="192.0" x2="30.2" y2="188.9"/><line class="ctick" x1="17.0" y1="178.3" x2="26.8" y2="176.2"/><line class="ctick" x1="14.7" y1="164.2" x2="24.7" y2="163.2"/><line class="ctick" x1="14.0" y1="150.0" x2="32.0" y2="150.0"/><line class="ctick" x1="14.7" y1="135.8" x2="24.7" y2="136.8"/><line class="ctick" x1="17.0" y1="121.7" x2="26.8" y2="123.8"/><line class="ctick" x1="20.7" y1="108.0" x2="30.2" y2="111.1"/><line class="ctick" x1="25.8" y1="94.7" x2="34.9" y2="98.8"/><line class="ctick" x1="32.2" y1="82.0" x2="47.8" y2="91.0"/><line class="ctick" x1="40.0" y1="70.1" x2="48.1" y2="75.9"/><line class="ctick" x1="48.9" y1="59.0" x2="56.4" y2="65.7"/><line class="ctick" x1="59.0" y1="48.9" x2="65.7" y2="56.4"/><line class="ctick" x1="70.1" y1="40.0" x2="75.9" y2="48.1"/><line class="ctick" x1="82.0" y1="32.2" x2="91.0" y2="47.8"/><line class="ctick" x1="94.7" y1="25.8" x2="98.8" y2="34.9"/><line class="ctick" x1="108.0" y1="20.7" x2="111.1" y2="30.2"/><line class="ctick" x1="121.7" y1="17.0" x2="123.8" y2="26.8"/><line class="ctick" x1="135.8" y1="14.7" x2="136.8" y2="24.7"/><text class="cnum" x="150.0" y="42.0" font-size="15" text-anchor="middle" dominant-baseline="middle">XII</text><text class="cnum" x="204.0" y="56.5" font-size="15" text-anchor="middle" dominant-baseline="middle">I</text><text class="cnum" x="243.5" y="96.0" font-size="15" text-anchor="middle" dominant-baseline="middle">II</text><text class="cnum" x="258.0" y="150.0" font-size="15" text-anchor="middle" dominant-baseline="middle">III</text><text class="cnum" x="243.5" y="204.0" font-size="15" text-anchor="middle" dominant-baseline="middle">IIII</text><text class="cnum" x="204.0" y="243.5" font-size="15" text-anchor="middle" dominant-baseline="middle">V</text><text class="cnum" x="150.0" y="258.0" font-size="15" text-anchor="middle" dominant-baseline="middle">VI</text><text class="cnum" x="96.0" y="243.5" font-size="15" text-anchor="middle" dominant-baseline="middle">VII</text><text class="cnum" x="56.5" y="204.0" font-size="15" text-anchor="middle" dominant-baseline="middle">VIII</text><text class="cnum" x="42.0" y="150.0" font-size="15" text-anchor="middle" dominant-baseline="middle">IX</text><text class="cnum" x="56.5" y="96.0" font-size="15" text-anchor="middle" dominant-baseline="middle">X</text><text class="cnum" x="96.0" y="56.5" font-size="15" text-anchor="middle" dominant-baseline="middle">XI</text><line class="chand hr" id="hH" x1="150" y1="150" x2="150" y2="88"/><line class="chand mn" id="hM" x1="150" y1="150" x2="150" y2="58"/><line class="chand sc" id="hS" x1="150" y1="150" x2="150" y2="48"/><circle class="cpin" cx="150" cy="150" r="4.5"/></svg></span><span class="word" id="word"><span class="ltr">N</span><span class="ltr">i</span><span class="ltr">n</span><span class="ltr">g</span><span class="ltr">e</span><span class="ltr">n</span></span></span><br><span class="tls">Tools</span></h1>
+  <div class="digi" id="digi" aria-hidden="true">00<span class="cl">:</span>00<span class="cl">:</span>00<span class="dt" id="digid"></span></div>
+</header>
+<div class="roleline"><span class="roletag" id="roleTag">Memuat…</span></div>
+<div class="bar"><input id="q" type="search" placeholder="Cari tool…" autocomplete="off" aria-label="Cari tool"><button class="btn g" id="rn">Acak</button></div>
+<div id="seg" role="tablist" aria-label="Kategori"></div>
+<div class="meta"><span id="cnt"></span></div>
+<div id="grid"></div>
+<footer>Alat bawaan jalan di browser kamu. Tidak ada data yang dikirim ke server.</footer>
+</main>
+<div id="dim"></div>
+<div id="sh" role="dialog" aria-modal="true" aria-labelledby="mt"><div id="shin"><div class="sh"><h2 id="mt"></h2><button class="x" id="mx">Tutup</button></div><div id="mb"></div><div class="ldc" id="ldc"><div class="ring"><i></i><i></i><span class="dot"></span></div><span class="lbl">Menyiapkan tool…</span></div><div id="ld"><div class="pc"><span id="ldt">Memuat…</span><span id="ldp">0%</span></div><div class="pb"><div class="pf" id="ldf"></div></div><div class="lg" id="ldg"></div></div></div></div>
+<div id="ts" role="status" aria-live="polite"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+(function(){
+  var bl=$("bl"),p=$("blp"),reduce=matchMedia("(prefers-reduced-motion: reduce)").matches,
+      t0=performance.now(),dur=3000;
+  if(reduce){setTimeout(function(){bl.classList.add("gone")},500);return}
+  function go(now){var el=now-t0,pct=Math.min(100,Math.round(el/dur*100));
+    p.textContent=pct+"%";
+    if(el<dur)requestAnimationFrame(go);
+    else setTimeout(function(){bl.classList.add("gone")},160)}
+  requestAnimationFrame(go);
+})();
+function copy(t,b){var d=function(){var o=b.textContent;b.textContent="Tersalin ✓";setTimeout(function(){b.textContent=o},1200)};
+ try{navigator.clipboard.writeText(t).then(d,fb)}catch(e){fb()}
+ function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");d()}catch(e){}a.remove()}}
+function dl(blob,name){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+var PAGE_BG="";
+if(PAGE_BG){document.body.style.background=/^(https?:|\/|\.|data:)/.test(PAGE_BG)?"linear-gradient(rgba(10,3,20,.6),rgba(10,3,20,.85)),url('"+PAGE_BG+"') center/cover fixed":PAGE_BG}
+
+var T=[
+{id:"am-unlocker",ic:"🎬",n:"AM Unlocker",d:"Buka premium Alight Motion via magic link.",b:"VIP",c:"Tools",vip:true,r:function(e){
+  e.innerHTML = [
+    '<style>',
+    '.am-wrap { font-family: \'Quicksand\', sans-serif; color: #f0e6ec; text-align: left; padding-bottom: 20px; }',
+    '.am-head { text-align: center; margin-bottom: 20px; margin-top: 10px; }',
+    '.am-title { font-family: \'Bricolage Grotesque\', sans-serif; font-size: 28px; color: #f0a8c0; margin: 0; line-height: 1.2; font-weight: 800; letter-spacing: -0.5px; }',
+    '.am-title span { color: #f0e6ec; }',
+    '.am-sub { font-size: 13px; color: #a898b0; margin-top: 6px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }',
+    '.am-desc { color: #a898b0; font-size: 12.5px; font-style: italic; margin-top: 12px; }',
+    '.am-dash { border-top: 2px dashed rgba(200,160,200,0.18); margin: 16px 0; }',
+    '.am-steps { text-align: center; margin-bottom: 16px; }',
+    '.am-step-label { font-family: \'Bricolage Grotesque\', sans-serif; font-size: 18px; font-weight: 800; color: #f0a8c0; margin-bottom: 8px; letter-spacing: .05em; text-transform: uppercase; }',
+    '.am-bar { height: 4px; background: rgba(200,160,200,0.18); border-radius: 999px; overflow: hidden; }',
+    '.am-bar-fill { height: 100%; width: 33.33%; background: linear-gradient(90deg, #f0a8c0, #a8d0c0); border-radius: 999px; transition: width 0.55s cubic-bezier(.34,1.4,.64,1); }',
+    '.am-stats { display: flex; justify-content: space-between; align-items: center; background: rgba(44,34,56,0.72); border: 1.5px solid rgba(200,160,200,0.14); padding: 18px 22px; border-radius: 20px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); }',
+    '.am-stat-label { color: #a898b0; font-size: 10.5px; font-weight: 700; text-transform: uppercase; }',
+    '.am-stat-val { font-family: \'Bricolage Grotesque\', sans-serif; font-size: 28px; font-weight: 800; color: #f0e6ec; line-height: 1.1; margin-top: 4px; }',
+    '.am-stat-val.pink { color: #f0a8c0; }',
+    '.am-panel { background: rgba(44,34,56,0.72); border: 1.5px solid rgba(200,160,200,0.14); padding: 22px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.45); position: relative; overflow: hidden; }',
+    '.am-panel h2 { font-family: \'Bricolage Grotesque\', sans-serif; font-size: 20px; font-weight: 800; color: #f0e6ec; margin-bottom: 4px; line-height: 1.2; letter-spacing: -0.3px; }',
+    '.am-panel h2.ok { color: #a8d0c0; }',
+    '.am-panel .hint { color: #a898b0; font-size: 12px; margin-bottom: 16px; }',
+    '.am-label { display: block; color: #a898b0; font-size: 10.5px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }',
+    '.am-input { width: 100%; background: #241c30; border: 1.5px solid rgba(200,160,200,0.18); color: #f0e6ec; font-family: \'Quicksand\', sans-serif; font-size: 13.5px; padding: 12px 14px; border-radius: 14px; outline: none; transition: all 0.25s ease; }',
+    '.am-input:focus { border-color: #f0a8c0; box-shadow: 0 0 0 4px rgba(240,168,192,0.3); }',
+    '.am-btn { background: linear-gradient(135deg, #f0a8c0, #c084a0); color: #2a1820; border: none; font-family: \'Quicksand\', sans-serif; font-weight: 700; font-size: 13px; padding: 12px 22px; border-radius: 14px; cursor: pointer; margin-top: 14px; box-shadow: 0 5px 14px rgba(240,168,192,0.3); transition: all 0.25s cubic-bezier(.34,1.4,.64,1); }',
+    '.am-btn:hover { transform: translateY(-2px); box-shadow: 0 9px 22px rgba(240,168,192,0.3); }',
+    '.am-btn.sec { background: transparent; color: #a898b0; border: 1.5px solid rgba(200,160,200,0.18); box-shadow: none; }',
+    '.am-btn.sec:hover { color: #f0e6ec; border-color: #f0a8c0; }',
+    '.am-kv { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1.5px dashed rgba(200,160,200,0.18); font-size: 12.5px; }',
+    '.am-kv b { color: #a898b0; font-size: 10.5px; padding-top: 2px; text-transform: uppercase; }',
+    '.am-kv span { color: #f0e6ec; text-align: right; word-break: break-all; max-width: 65%; font-weight: 600; }',
+    '.am-tok { background: #241c30; border: 1.5px dashed rgba(200,160,200,0.18); padding: 12px 14px; font-family: monospace; font-size: 10.5px; word-break: break-all; color: #a898b0; max-height: 90px; overflow: hidden; border-radius: 14px; margin-top: 6px; }',
+    '.am-btn.tiny { margin: 12px 8px 0 0; padding: 7px 14px; font-size: 11px; border-radius: 10px; }',
+    '.am-msg { padding: 11px 14px; font-size: 12.5px; font-weight: 600; margin: 14px 0 0; display: none; border-radius: 14px; }',
+    '.am-msg.err { display: block; background: rgba(212,120,120,0.15); border: 1.5px solid rgba(212,120,120,0.5); color: #ff7a7a; }',
+    '.am-msg.ok { display: block; background: rgba(157,192,157,0.18); border: 1.5px solid #a8d0c0; color: #a8d0c0; }',
+    '</style>',
+    '<div class="am-wrap">',
+    '  <div class="am-head">',
+    '    <h1 class="am-title">am <span>unlock</span> Premium</h1>',
+    '    <div class="am-sub">by Ningen</div>',
+    '    <div class="am-dash"></div>',
+    '    <div class="am-desc">alight motion premium — magic link activation</div>',
+    '  </div>',
+    '  <div class="am-steps">',
+    '    <div class="am-step-label" id="am-step-label">01 · email</div>',
+    '    <div class="am-bar"><div class="am-bar-fill" id="am-fill"></div></div>',
+    '  </div>',
+    '  <div class="am-stats">',
+    '    <div>',
+    '      <div class="am-stat-label">TOTAL AKTIVASI</div>',
+    '      <div class="am-stat-val pink">0</div>',
+    '    </div>',
+    '    <div style="text-align:right">',
+    '      <div class="am-stat-label">HARI INI</div>',
+    '      <div class="am-stat-val">0</div>',
+    '    </div>',
+    '  </div>',
+    '  <div class="am-panel">',
+    '    <div id="am-step1">',
+    '      <h2>masukkan email</h2>',
+    '      <p class="hint">link login dikirim ke email, tanpa password.</p>',
+    '      <label class="am-label">email</label>',
+    '      <input id="am-em" class="am-input" type="email" placeholder="nama@email.com">',
+    '      <button id="am-b1" class="am-btn" style="width:100%">kirim link →</button>',
+    '    </div>',
+    '    <div id="am-step2" style="display:none">',
+    '      <h2>tempel link</h2>',
+    '      <p class="hint">link terkirim ke <span id="am-w-em" style="color:#f0e6ec;font-weight:700">-</span>. copy link dari email, paste di sini.</p>',
+    '      <label class="am-label">link verifikasi</label>',
+    '      <input id="am-lk" class="am-input" type="text" placeholder="https://... atau oobCode">',
+    '      <div style="display:flex;gap:8px">',
+    '        <button id="am-b2" class="am-btn sec" style="flex:1">← kembali</button>',
+    '        <button id="am-b3" class="am-btn" style="flex:2">verifikasi →</button>',
+    '      </div>',
+    '    </div>',
+    '    <div id="am-step3" style="display:none">',
+    '      <h2 class="ok">premium aktif ✨</h2>',
+    '      <p class="hint">detail akun di bawah, token bisa dicopy.</p>',
+    '      <div class="am-kv"><b>email</b><span id="am-r-em">-</span></div>',
+    '      <div class="am-kv"><b>uid</b><span id="am-r-uid">-</span></div>',
+    '      <div class="am-kv"><b>order</b><span id="am-r-ord">-</span></div>',
+    '      <div style="margin-top:14px">',
+    '        <label class="am-label">id token</label>',
+    '        <div class="am-tok" id="am-r-tok">-</div>',
+    '        <button class="am-btn sec tiny" id="am-b4">copy token</button>',
+    '        <button class="am-btn sec tiny" id="am-b5">aktivasi lain</button>',
+    '      </div>',
+    '    </div>',
+    '    <div id="am-msg" class="am-msg"></div>',
+    '  </div>',
+    '</div>'
+  ].join('');
+
+  const msg = e.querySelector('#am-msg');
+  const s1 = e.querySelector('#am-step1');
+  const s2 = e.querySelector('#am-step2');
+  const s3 = e.querySelector('#am-step3');
+  const lbl = e.querySelector('#am-step-label');
+  const fill = e.querySelector('#am-fill');
+
+  const setStep = (n) => {
+    s1.style.display = n === 1 ? 'block' : 'none';
+    s2.style.display = n === 2 ? 'block' : 'none';
+    s3.style.display = n === 3 ? 'block' : 'none';
+    if(n === 1) { lbl.textContent = '01 · email'; fill.style.width = '33.33%'; }
+    if(n === 2) { lbl.textContent = '02 · link'; fill.style.width = '66.66%'; }
+    if(n === 3) { lbl.textContent = '03 · done ✨'; fill.style.width = '100%'; }
+  };
+
+  const showMsg = (txt, isErr) => {
+    msg.textContent = txt;
+    msg.className = 'am-msg ' + (isErr ? 'err' : 'ok');
+  };
+
+  e.querySelector('#am-b1').onclick = async () => {
+    const em = e.querySelector('#am-em').value.trim();
+    if(!em.includes('@')) return showMsg('email gak valid', 1);
+    const btn = e.querySelector('#am-b1');
+    btn.disabled = true; btn.textContent = 'mengirim...';
+    msg.className = 'am-msg'; // hide
+    
+    try {
+      const r = await fetch('/api/am-tool', {
+        method: 'POST', 
+        headers: {'content-type':'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'send', email: em })
+      });
+      const text = await r.text();
+      let j = {};
+      try { j = JSON.parse(text) } catch(e) { throw new Error('Respon server tidak valid'); }
+
+      if(j.success) {
+        showMsg('link terkirim, cek email', 0);
+        e.querySelector('#am-w-em').textContent = em;
+        setTimeout(() => { setStep(2); msg.className = 'am-msg'; }, 700);
+      } else {
+        showMsg(j.message || 'gagal', 1);
+      }
+    } catch(err) {
+      showMsg('server gak nyambung', 1);
+    }
+    btn.disabled = false; btn.textContent = 'kirim link →';
+  };
+
+  e.querySelector('#am-b2').onclick = () => { setStep(1); msg.className = 'am-msg'; };
+
+  e.querySelector('#am-b3').onclick = async () => {
+    const raw = e.querySelector('#am-lk').value.trim();
+    if(!raw) return showMsg('link kosong', 1);
+    if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
+      return showMsg('Format link tidak valid / terpotong.', 1);
+    }
+
+    const btn = e.querySelector('#am-b3');
+    btn.disabled = true; btn.textContent = 'verifikasi...';
+    msg.className = 'am-msg';
+
+    try {
+      const r = await fetch('/api/am-tool', {
+        method: 'POST', 
+        headers: {'content-type':'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'verify', email: e.querySelector('#am-em').value.trim(), magicLink: raw })
+      });
+      const text = await r.text();
+      let j = {};
+      try { j = JSON.parse(text) } catch(e) { throw new Error('Respon server tidak valid'); }
+
+      if(j.success) {
+        e.querySelector('#am-r-em').textContent = j.data.email;
+        e.querySelector('#am-r-uid').textContent = j.data.uid;
+        e.querySelector('#am-r-ord').textContent = j.data.orderId || '-';
+        e.querySelector('#am-r-tok').textContent = j.data.idToken;
+        window.__tok = j.data.idToken;
+        msg.className = 'am-msg';
+        setStep(3);
+      } else {
+        showMsg(j.message || 'gagal', 1);
+      }
+    } catch(err) {
+      showMsg('server gak nyambung', 1);
+    }
+    btn.disabled = false; btn.textContent = 'verifikasi →';
+  };
+
+  e.querySelector('#am-b4').onclick = () => {
+    navigator.clipboard.writeText(window.__tok || '');
+    const btn = e.querySelector('#am-b4');
+    btn.textContent = 'copied ✓';
+    setTimeout(() => btn.textContent = 'copy token', 1500);
+  };
+  e.querySelector('#am-b5').onclick = () => {
+    e.querySelector('#am-lk').value = '';
+    setStep(1);
+    msg.className = 'am-msg';
+  };
+}},
+{id:"tt-dl",ic:"\u2b07\ufe0f",n:"TikTok Downloader",d:"Unduh video TikTok tanpa watermark, sekalian audionya (MP3).",b:"TIKTOK",c:"Downloader",r:function(e){
+ e.innerHTML='<label>Link video TikTok</label><input id="u" type="url" placeholder="https://www.tiktok.com/@user/video/...">'
+  +'<div class="btns"><button class="btn" id="go">Ambil Video</button></div>'
+  +'<div class="res" id="o" style="display:none"></div>';
+ var busy=false,btn=e.querySelector("#go"),box=e.querySelector("#o");
+ function run(){
+   var url=e.querySelector("#u").value.trim();if(!url||busy)return;
+   busy=true;btn.disabled=true;btn.textContent="Mengambil\u2026";box.style.display="none";
+   fetch("/api/dl-tiktok",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:url})})
+    .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+    .then(function(res){
+      busy=false;btn.disabled=false;btn.textContent="Ambil Video";box.style.display="block";
+      if(!res.ok){box.innerHTML='<span style="color:#ff7a7a">'+esc((res.j&&res.j.error)||"Gagal mengambil video.")+'</span>';return}
+      var j=res.j,html="";
+      if(j.cover)html+='<img src="'+esc(j.cover)+'" style="max-width:100%;border-radius:10px;margin-bottom:10px">';
+      if(j.title)html+='<div style="font-size:14px;margin-bottom:4px">'+esc(j.title)+'</div>';
+      if(j.author)html+='<div style="font-size:12px;color:var(--mut);margin-bottom:12px">@'+esc(j.author)+'</div>';
+      html+='<div class="btns"><a class="btn" href="'+esc(j.video)+'" target="_blank" rel="noopener">Buka Video</a>'
+        +(j.audio?'<a class="btn g" href="'+esc(j.audio)+'" target="_blank" rel="noopener">Buka Audio (MP3)</a>':'')+'</div>'
+        +'<p style="font-size:12px;color:var(--mut);margin-top:10px">Kalau cuma terbuka di tab baru, ketuk titik tiga di pemutar atau tahan videonya lalu pilih Simpan/Unduh.</p>';
+      box.innerHTML=html;
+    }).catch(function(){busy=false;btn.disabled=false;btn.textContent="Ambil Video";box.style.display="block";box.innerHTML='<span style="color:#ff7a7a">Gagal menghubungi server.</span>'});
+ }
+ btn.onclick=run;e.querySelector("#u").onkeydown=function(ev){if(ev.key==="Enter")run()};
+}},
+{id:"pin-dl",ic:"\ud83d\udcf8",n:"Pinterest Downloader",d:"Unduh video dari pin Pinterest, tinggal tempel link.",b:"PINTEREST",c:"Downloader",r:function(e){
+ e.innerHTML='<label>Link pin Pinterest</label><input id="u" type="url" placeholder="https://pin.it/... atau https://www.pinterest.com/pin/...">'
+  +'<div class="btns"><button class="btn" id="go">Ambil Video</button></div>'
+  +'<div class="res" id="o" style="display:none"></div>';
+ var busy=false,btn=e.querySelector("#go"),box=e.querySelector("#o");
+ function run(){
+   var url=e.querySelector("#u").value.trim();if(!url||busy)return;
+   busy=true;btn.disabled=true;btn.textContent="Mengambil\u2026";box.style.display="none";
+   fetch("/api/dl-pinterest",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:url})})
+    .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+    .then(function(res){
+      busy=false;btn.disabled=false;btn.textContent="Ambil Video";box.style.display="block";
+      if(!res.ok){box.innerHTML='<span style="color:#ff7a7a">'+esc((res.j&&res.j.error)||"Gagal mengambil video.")+'</span>';return}
+      var j=res.j,html="";
+      if(j.cover)html+='<img src="'+esc(j.cover)+'" style="max-width:100%;border-radius:10px;margin-bottom:10px">';
+      if(j.title)html+='<div style="font-size:14px;margin-bottom:12px">'+esc(j.title)+'</div>';
+      html+='<div class="btns"><a class="btn" href="'+esc(j.video)+'" target="_blank" rel="noopener">Buka Video</a></div>'
+        +'<p style="font-size:12px;color:var(--mut);margin-top:10px">Kalau cuma terbuka di tab baru, tahan videonya lalu pilih Simpan/Unduh.</p>';
+      box.innerHTML=html;
+    }).catch(function(){busy=false;btn.disabled=false;btn.textContent="Ambil Video";box.style.display="block";box.innerHTML='<span style="color:#ff7a7a">Gagal menghubungi server.</span>'});
+ }
+ btn.onclick=run;e.querySelector("#u").onkeydown=function(ev){if(ev.key==="Enter")run()};
+}},
+{id:"finder-preset",ic:"🔎",n:"Finder Preset",d:"Tempel link TikTok edit, temukan link preset dari caption dan komentar.",b:"TIKTOK",c:"Tools",u:"https://ningen-finder-preset.vercel.app/"},
+];
+
+
+
+var cats=["Semua","Tools","Downloader"],cat="Semua",first=true,cur=null,sh=$("sh"),dim=$("dim"),ROLE="visitor";
+var PAL=[["#7b4dff","#ffffff"],["#ff7ab8","#2a0a1c"],["#ff9a3d","#2b1200"],["#3ddc97","#032616"],["#52b8ff","#021a2e"],["#f5e050","#2a2300"]];
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function buzz(){try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}}
+var tt;function toast(m){var e=$("ts");e.textContent=m;e.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){e.classList.remove("on")},1700)}
+
+/* Jam Romawi hidup di belakang judul "Ningen" + interaksi sentuh/geser */
+(function(){
+  var hero=$("hero"),cw=$("cwrap"),hH=$("hH"),hM=$("hM"),hS=$("hS");
+  if(!hero||!cw)return;
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function setHand(el,len,deg){var r=deg*Math.PI/180,x=150+len*Math.sin(r),y=150-len*Math.cos(r);el.setAttribute("x2",x.toFixed(1));el.setAttribute("y2",y.toFixed(1))}
+  var digi=$("digi"),digid=$("digid"),DAYS=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"],MON=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+  function pad(n){return n<10?"0"+n:""+n}
+  var lastSec=-1;
+  function tick(){
+    var d=new Date(),h=d.getHours()%12,m=d.getMinutes(),s=d.getSeconds();
+    setHand(hH,62,(h+m/60)*30);
+    setHand(hM,92,(m+s/60)*6);
+    setHand(hS,102,s*6);
+    if(digi&&s!==lastSec){lastSec=s;
+      digi.innerHTML=pad(d.getHours())+'<span class="cl">:</span>'+pad(m)+'<span class="cl">:</span>'+pad(s)+'<span class="dt">'+DAYS[d.getDay()]+", "+d.getDate()+" "+MON[d.getMonth()]+'</span>'}
+  }
+  tick();setInterval(tick,1000);
+
+  var rot=0,raf=null,letters=[].slice.call(hero.querySelectorAll(".ltr"));
+  function applyFrame(mx,my){
+    cw.style.setProperty("--rot",rot.toFixed(2)+"deg");cw.style.transform="translate(-50%,-50%) rotate("+rot+"deg)";
+    if(mx==null){letters.forEach(function(l){l.style.transform=""});return}
+    letters.forEach(function(l){
+      var r=l.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+      var dx=mx-cx,dy=my-cy,dist=Math.sqrt(dx*dx+dy*dy),rad=70,f=Math.max(0,1-dist/rad);
+      l.style.transform=f?"translateY("+(-8*f).toFixed(1)+"px) scale("+(1+.14*f).toFixed(2)+")":"";
+    });
+  }
+  if(!reduce){
+    hero.addEventListener("pointermove",function(e){
+      var r=hero.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+      var dx=(e.clientX-cx)/r.width;
+      rot=Math.max(-10,Math.min(10,dx*14));
+      cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){applyFrame(e.clientX,e.clientY)})
+    });
+    hero.addEventListener("pointerleave",function(){rot=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){applyFrame(null,null)})});
+  }
+  var kw=["tik, tok…","waktunya eksplor","ketukan waktu","jam terus berputar","satu ketukan, sejuta tools"],ki=0;
+  hero.querySelector(".word").addEventListener("click",function(){
+    buzz();hero.classList.remove("pulse");void hero.offsetWidth;hero.classList.add("pulse");
+    letters.forEach(function(l,i){l.style.transition="transform .3s var(--e)";setTimeout(function(){l.style.transform="translateY(-10px)";setTimeout(function(){l.style.transform="";l.style.transition=""},180)},i*40)});
+    toast(kw[ki%kw.length]);ki++;
+  });
+})();
+
+function colorFor(t){var h=0,s=String(t.id);for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;var p=PAL[h%PAL.length];return{bg:p[0],ink:p[1]}}
+function bgImg(t){var b=t.bg;if(!b)return"";return /^(https?:|\/|\.|data:)/.test(b)?"url('"+String(b).replace(/'/g,"%27")+"')":b}
+function tile(t,i){var c=colorFor(t),im=bgImg(t),locked=t.vip&&ROLE==="visitor",vip=t.vip;
+ return '<article class="c'+(im?' im':'')+'" data-id="'+esc(String(t.id))+'" tabindex="0" role="button" aria-label="'+esc(String(t.n))+(vip?' (VIP)':'')+'" style="'+esc('--i:'+i+';--tile:'+c.bg+(im?';--img:'+im:''))+'">'
+ +(im?'<span class="ph"></span>':'')
+ +'<span class="tg">'+esc(String(t.b).toLowerCase())+'</span>'
+ +(vip?'<span class="rb'+(locked?'':' ok')+'">VIP'+(locked?'':' \u2713')+'</span>':'')
+ +'<h3>'+esc(String(t.n))+'</h3></article>'}
+
+var CATCOL={"Semua":["#f3eaff","#1a0b2e"],"Maker":["#ff7ab8","#2a0a1c"],"Tools":["#52b8ff","#021a2e"],"Visual":["#3ddc97","#032616"],"Downloader":["#ffd23d","#2b2200"]};
+function catColor(c){return CATCOL[c]||["#b266ff","#1a0b2e"]}
+function chips(){
+  var n={};T.forEach(function(t){n[t.c]=(n[t.c]||0)+1});
+  $("seg").innerHTML=cats.map(function(c){var cc=catColor(c);
+    return '<button role="tab" data-c="'+esc(c)+'" class="'+(c==cat?'on':'')+'" style="'+esc('--cc:'+cc[0]+';--cb:'+cc[1])+'">'+esc(c)+'<small>'+(c=="Semua"?T.length:(n[c]||0))+'</small></button>'}).join("");
+  moveInd()}
+function moveInd(){var b=$("seg").querySelector("button.on");if(!b)return;
+  try{b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}catch(e){}}
+$("seg").onclick=function(e){var b=e.target.closest("button");if(!b)return;cat=b.dataset.c;
+  [].forEach.call($("seg").querySelectorAll("button"),function(x){x.classList.toggle("on",x===b)});moveInd();list();buzz()};
+
+function list(){
+  var q=$("q").value.toLowerCase().trim();
+  var a=T.filter(function(t){return(cat=="Semua"||t.c==cat)&&(!q||(t.n+" "+t.d+" "+t.b).toLowerCase().indexOf(q)>-1)});
+  var g=$("grid");
+  if(first&&a.length){g.classList.add("intro");first=false;setTimeout(function(){g.classList.remove("intro")},1100)}
+  g.innerHTML=a.length?a.map(tile).join(""):'<div class="empty"><p>'+(q?'Tidak ada tool yang cocok dengan \u201C'+esc($("q").value.trim())+'\u201D.':'Belum ada tool di kategori ini.')+'</p><button class="btn" id="rs">Tampilkan semua</button></div>';
+  $("cnt").textContent=a.length+" tool"+((q||cat!="Semua")?" ditemukan":"");
+}
+$("q").oninput=list;
+$("grid").onclick=function(e){
+  if(e.target.id==="rs"){$("q").value="";cat="Semua";chips();list();return}
+  var c=e.target.closest(".c");if(!c)return;openTool(c.dataset.id)};
+$("grid").onkeydown=function(e){if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("c")){e.preventDefault();openTool(e.target.dataset.id)}};
+$("rn").onclick=function(){openTool(T[Math.floor(Math.random()*T.length)].id)};
+
+/* Buka tool: kartu melebar jadi panel, tutup: menyusut balik ke kartunya */
+function setGeo(r,rad){sh.style.left=r.left+"px";sh.style.top=r.top+"px";sh.style.width=r.width+"px";sh.style.height=r.height+"px";sh.style.borderRadius=rad+"px"}
+function finalRect(){var m=innerWidth<700,w=Math.min(innerWidth,640),h=m?innerHeight:Math.round(innerHeight*.92);return{left:(innerWidth-w)/2,top:(innerHeight-h)/2,width:w,height:h,rad:m?0:28}}
+function tileRect(id){var el=document.querySelector('.c[data-id="'+id+'"]');return el?el.getBoundingClientRect():{left:innerWidth/2-30,top:innerHeight/2-30,width:60,height:60}}
+
+var LOGS=["Menghubungkan ke tool…","Menyiapkan antarmuka…","Memuat komponen…","Hampir siap…"];
+function boot(render,ms){
+  var ld=$("ld"),f=$("ldf"),p=$("ldp"),g=$("ldg"),ldc=$("ldc"),t0=Date.now(),dur=ms||(700+Math.random()*500);
+  $("mb").style.visibility="hidden";ld.classList.add("on");ldc.classList.add("on");g.innerHTML="";f.style.width="0%";p.textContent="0%";
+  var shown=0;
+  function tick(){
+    var el=Date.now()-t0,pct=Math.min(100,Math.round(el/dur*100));
+    f.style.width=pct+"%";p.textContent=pct+"%";
+    var want=Math.floor(pct/100*LOGS.length);
+    while(shown<want){var ln=document.createElement("span");ln.textContent=LOGS[shown];g.appendChild(ln);g.scrollTop=g.scrollHeight;shown++}
+    if(pct<100){requestAnimationFrame(tick)}
+    else{
+      var ok=document.createElement("span");ok.className="ok";ok.textContent="Siap.";g.appendChild(ok);g.scrollTop=g.scrollHeight;
+      ldc.classList.remove("on");
+      setTimeout(function(){ld.classList.remove("on");$("mb").style.visibility="";render()},220);
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+function openTool(id,fromHash){
+  var t=T.filter(function(x){return x.id==id})[0];if(!t)return;
+  if(t.u&&fromHash)return;
+  buzz();$("mt").textContent=t.n;$("mb").innerHTML="";$("shin").scrollTop=0;
+  sh.style.setProperty("--tile",colorFor(t).bg);
+  setGeo(tileRect(id),22);sh.classList.add("nt","on");void sh.offsetWidth;sh.classList.remove("nt");
+  dim.classList.add("on");document.body.style.overflow="hidden";cur=id;
+  var f=finalRect();requestAnimationFrame(function(){setGeo(f,f.rad);sh.classList.add("full")});
+  try{if(!fromHash)history.pushState({o:1},"","#"+id)}catch(e){}
+  if(t.vip&&ROLE==="visitor")vipGate(t);else fillTool(t);
+}
+function fillTool(t){
+  if(t.u){
+    boot(function(){
+      window.open(t.u,"_blank","noopener");
+      $("mb").innerHTML='<div style="text-align:center;padding:50px 10px 10px">'
+        +'<p style="font-size:15px;color:var(--mut);margin:0 0 16px">Tool dibuka di tab baru. Kalau belum muncul, ketuk tombol di bawah.</p>'
+        +'<a class="btn" href="'+esc(t.u)+'" target="_blank" rel="noopener">Buka lagi</a></div>';
+    },2200);
+    return;
+  }
+  boot(function(){t.r($("mb"))},3000);
+}
+function vipGate(t){
+  $("mb").innerHTML='<div class="vipgate"><div class="vi">VIP</div><p>Tool ini khusus VIP. Masukkan kunci untuk membuka '+esc(String(t.n))+'.</p>'
+    +'<input id="vipc" type="text" inputmode="text" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters">'
+    +'<div class="er" id="vipe"></div>'
+    +'<div class="btns" style="justify-content:center"><button class="btn" id="vipok">Buka</button></div></div>';
+  function tryUnlock(){
+    var v=$("vipc").value.trim();if(!v)return;
+    $("vipe").textContent="";$("vipok").disabled=true;$("vipok").textContent="Memeriksa…";
+    fetch("/api/vip",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:v})})
+      .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+      .then(function(res){
+        $("vipok").disabled=false;$("vipok").textContent="Buka";
+        if(res.ok){ROLE="vip";buzz();toast("Terbuka, selamat datang VIP ✨");setRoleTag();fillTool(t);list()}
+        else{buzz();$("vipe").textContent=(res.j&&res.j.error)||"Kunci salah.";$("vipc").select()}
+      }).catch(function(){$("vipok").disabled=false;$("vipok").textContent="Buka";$("vipe").textContent="Gagal menghubungi server."});
+  }
+  $("vipok").onclick=tryUnlock;
+  $("vipc").onkeydown=function(e){if(e.key==="Enter")tryUnlock()};
+  setTimeout(function(){try{$("vipc").focus()}catch(e){}},360);
+}
+function doClose(){
+  if(!cur)return;var id=cur;
+  sh.classList.remove("full");setGeo(tileRect(id),22);dim.classList.remove("on");document.body.style.overflow="";cur=null;
+  setTimeout(function(){if(!cur){sh.classList.remove("on");$("mb").innerHTML=""}},430);
+  try{if(location.hash)history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+}
+function closeTool(){if(!cur)return;try{if(history.state&&history.state.o){history.back();return}}catch(e){}doClose()}
+window.addEventListener("popstate",function(){if(cur)doClose()});
+window.addEventListener("resize",function(){if(cur){var f=finalRect();setGeo(f,f.rad)}moveInd()});
+$("mx").onclick=closeTool;dim.onclick=closeTool;
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){if(cur)closeTool();else if($("q").value){$("q").value="";list()}}
+  else if(e.key==="/"&&!cur&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||"")){e.preventDefault();$("q").focus()}
+});
+
+// Status peran: Owner (login admin) > VIP (kunci aktif) > Pengunjung
+var ROLE_LABEL={owner:"Owner",vip:"VIP",visitor:"Pengunjung"};
+function setRoleTag(){var e=$("roleTag");if(!e)return;e.textContent=ROLE_LABEL[ROLE];e.className="roletag r-"+ROLE}
+function detectRole(){
+  return fetch("/api/login",{credentials:"same-origin",cache:"no-store"}).then(function(r){return r.ok?r.json():{ok:false}}).catch(function(){return{ok:false}})
+  .then(function(o){ if(o&&o.ok){ROLE="owner";return} 
+    return fetch("/api/vip",{credentials:"same-origin",cache:"no-store"}).then(function(r){return r.ok?r.json():{ok:false}}).catch(function(){return{ok:false}})
+    .then(function(v){ROLE=(v&&v.ok)?"vip":"visitor"}) });
+}
+
+// Tools tambahan + pengaturan dari panel admin (/admin.html)
+Promise.all([
+  detectRole(),
+  fetch("/api/tools",{cache:"no-store"}).then(function(r){return r.ok?r.json():{}}).catch(function(){return{}})
+]).then(function(res){
+ var d=res[1]||{};
+ var a=Array.isArray(d)?d:(d.tools||[]),ov=Array.isArray(d)?{}:(d.over||{});
+ T.forEach(function(t){var o=ov[t.id];if(!o)return;if(o.n)t.n=o.n;if(o.bg)t.bg=o.bg;if(o.vip!==undefined)t.vip=!!o.vip});
+ T=T.filter(function(t){return!(ov[t.id]&&ov[t.id].hide)});
+ var m=a.map(function(x){var c=x.c||"Tools";if(cats.indexOf(c)<0)cats.push(c);return{id:"c-"+x.id,n:x.n,d:x.d||"",b:x.b||"LINK",c:c,u:x.u,bg:x.bg,vip:!!x.vip}});
+ T.unshift.apply(T,m);setRoleTag();chips();list();
+}).catch(function(){setRoleTag()});
+chips();list();setRoleTag();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(moveInd);
+if(location.hash)openTool(location.hash.slice(1),true);
+</script>
+</body>
+</html>
