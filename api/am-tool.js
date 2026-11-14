@@ -26,29 +26,48 @@ const friendlyErr = errStr => {
   if (!errStr) return 'Terjadi kesalahan autentikasi.'
   if (errStr.includes('INVALID_OOB_CODE')) return 'Kode magic link tidak valid atau sudah pernah digunakan.'
   if (errStr.includes('EXPIRED_OOB_CODE')) return 'Magic link telah kadaluarsa. Kirim ulang tautan baru.'
+  if (errStr.includes('INVALID_EMAIL')) return 'Format email tidak valid.'
   return errStr.length > 100 ? errStr.slice(0, 100) : errStr
 }
 
+// 🔥 INI FUNGSI YANG UDAH GW PERBAIKI (Bisa ngebuka link bungkusan Gmail)
 function getOobCode(raw) {
   if (!raw) return null
   let s = String(raw).trim().replace(/&amp;/g, '&')
+
   try {
     const u = new URL(s)
     let c = u.searchParams.get('oobCode')
     if (c) return c
+    
+    // Mencari oobCode di dalam link yang dibungkus (redirect)
+    const nested = u.searchParams.get('link') || u.searchParams.get('url') || u.searchParams.get('q') || u.searchParams.get('continueUrl')
+    if (nested) {
+      try {
+        const nu = new URL(nested)
+        let nc = nu.searchParams.get('oobCode')
+        if (nc) return nc
+      } catch(e) {
+        const nm = nested.match(/[?&]oobCode=([^&]+)/i)
+        if (nm) return decodeURIComponent(nm[1])
+      }
+    }
   } catch (e) {}
+
+  // Pencarian paksa via Regex kalau format URL berantakan
   const m = s.match(/[?&]oobCode=([^&]+)/i)
   if (m) {
     let c = m[1]
     try { c = decodeURIComponent(c) } catch(e){}
     return c
   }
+
+  // Kalau user cuma paste kodenya doang tanpa link
   if (/^[a-zA-Z0-9_\-.]+$/.test(s) && !s.includes('://')) return s
   return null
 }
 
 module.exports = async (req, res) => {
-  // CORS Header biar aman
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS,POST')
@@ -57,7 +76,6 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method Not Allowed' })
 
-  
   const { action, email, magicLink } = req.body
 
   if (action === 'send') {
@@ -80,7 +98,7 @@ module.exports = async (req, res) => {
         })
       });
       const data = await r.json();
-      if (!r.ok) throw { response: { data } }; // Lempar error kalau Firebase nolak
+      if (!r.ok) throw { response: { data } };
       
       return res.json({ success: true, message: 'Link terkirim.' })
     } catch (e) {
@@ -91,6 +109,7 @@ module.exports = async (req, res) => {
   if (action === 'verify') {
     if (!email || !magicLink) return res.status(400).json({ success: false, message: 'Email & link wajib diisi.' })
     
+    // Panggil fungsi getOobCode yang udah pinter
     const c = getOobCode(magicLink)
     if (!c) return res.status(400).json({ success: false, message: 'Format link tidak valid / terpotong.' })
 
