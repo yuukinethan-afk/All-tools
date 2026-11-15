@@ -5,7 +5,6 @@ function pick(obj, path) {
 }
 
 function cookieHeaderFrom(r) {
-  // Node (undici) exposes getSetCookie() for multiple Set-Cookie headers; fall back if unavailable.
   let raw = [];
   try { raw = typeof r.headers.getSetCookie === "function" ? r.headers.getSetCookie() : []; } catch (e) { raw = []; }
   if (!raw.length) { const one = r.headers.get("set-cookie"); if (one) raw = [one]; }
@@ -23,30 +22,54 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: "Tempel link TikTok yang valid." });
 
   try {
-    // 1) "Pemanasan": kunjungi beranda TikTok dulu buat dapat cookie anti-bot (ttwid, dst).
-    //    Tanpa ini, halaman video sering balik kosong / tanpa data.
     const warm = await fetch("https://www.tiktok.com/", { headers: { "User-Agent": UA, "Accept-Language": "en-US,en;q=0.9" } });
     const cookie = cookieHeaderFrom(warm);
 
-    // 2) Baru ambil halaman video asli, bawa cookie dari langkah 1.
     const r = await fetch(url, { headers: { "User-Agent": UA, "Accept-Language": "en-US,en;q=0.9", Cookie: cookie }, redirect: "follow" });
-    if (!r.ok) return res.status(502).json({ error: "TikTok tidak bisa diakses (HTTP " + r.status + ")." });
     const html = await r.text();
 
+    if (!r.ok) {
+      return res.status(502).json({
+        error: "TikTok tidak bisa diakses (HTTP " + r.status + ").",
+        debug: { stage: "fetch_video_page", status: r.status, finalUrl: r.url, warmStatus: warm.status, cookieCount: cookie ? cookie.split(";").length : 0, htmlLength: html.length },
+      });
+    }
+
     const m = html.match(/<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>([\s\S]*?)<\/script>/);
-    if (!m) return res.status(502).json({ error: "Data video tidak ditemukan di halaman. TikTok mungkin mengubah formatnya, atau link-nya salah." });
+    if (!m) {
+      return res.status(502).json({
+        error: "Skrip data video tidak ketemu di halaman.",
+        debug: {
+          stage: "script_not_found", status: r.status, finalUrl: r.url, warmStatus: warm.status,
+          cookieCount: cookie ? cookie.split(";").length : 0, htmlLength: html.length,
+          hasSigiState: html.includes("SIGI_STATE"), hasCaptcha: /captcha|verify|unusual traffic/i.test(html),
+          snippet: html.slice(0, 300),
+        },
+      });
+    }
 
     let data;
-    try { data = JSON.parse(m[1]); } catch (e) { return res.status(502).json({ error: "Gagal membaca data video." }); }
+    try { data = JSON.parse(m[1]); } catch (e) {
+      return res.status(502).json({ error: "Gagal membaca data video (JSON rusak).", debug: { stage: "json_parse", snippetLen: m[1].length } });
+    }
 
     const scope = pick(data, "__DEFAULT_SCOPE__");
     const detail = scope && (scope["webapp.video-detail"] || scope["webapp.a-b"]);
     const item = pick(detail, "itemInfo.itemStruct");
-    if (!item || !item.video) return res.status(404).json({ error: "Video tidak ditemukan. Mungkin privat, sudah dihapus, atau link-nya salah." });
+    if (!item || !item.video) {
+      return res.status(404).json({
+        error: "Video tidak ditemukan di data halaman.",
+        debug: {
+          stage: "item_not_found", scopeKeys: scope ? Object.keys(scope) : [],
+          detailKeys: detail ? Object.keys(detail) : [], statusMsg: pick(detail, "statusMsg") || "",
+          statusCode: pick(detail, "statusCode"),
+        },
+      });
+    }
 
     const video = item.video;
     const playUrl = (video.playAddr) || (video.downloadAddr) || (Array.isArray(video.bitrateInfo) && video.bitrateInfo[0] && pick(video.bitrateInfo[0], "PlayAddr.UrlList.0"));
-    if (!playUrl) return res.status(404).json({ error: "Link video tidak ditemukan." });
+    if (!playUrl) return res.status(404).json({ error: "Link video tidak ditemukan.", debug: { stage: "no_play_url", videoKeys: Object.keys(video) } });
 
     const music = item.music || {};
     const audioUrl = music.playUrl || pick(music, "playUrl.url") || "";
@@ -61,7 +84,6 @@ module.exports = async (req, res) => {
       audioTitle: String(music.title || "").slice(0, 120),
     });
   } catch (e) {
-    res.status(500).json({ error: "Gagal mengambil video. Coba lagi sebentar lagi." });
+    res.status(500).json({ error: "Gagal mengambil video.", debug: { stage: "exception", message: String(e && e.message || e) } });
   }
 };
-  
