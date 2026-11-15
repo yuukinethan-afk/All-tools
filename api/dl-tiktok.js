@@ -53,16 +53,22 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: "Gagal membaca data video (JSON rusak).", debug: { stage: "json_parse", snippetLen: m[1].length } });
     }
 
-    const scope = pick(data, "__DEFAULT_SCOPE__");
-    const detail = scope && (scope["webapp.video-detail"] || scope["webapp.a-b"]);
+    const scope = pick(data, "__DEFAULT_SCOPE__") || {};
+    let detail = scope["webapp.video-detail"] || scope["webapp.reflow.video.detail"] || scope["webapp.a-b"];
+    if (!detail) {
+      // Jaga-jaga kalau TikTok ganti nama kuncinya lagi: cari key apa saja yang mengandung "video" dan "detail".
+      const k = Object.keys(scope).find((x) => /video/i.test(x) && /detail/i.test(x));
+      if (k) detail = scope[k];
+    }
     const item = pick(detail, "itemInfo.itemStruct");
     if (!item || !item.video) {
       return res.status(404).json({
         error: "Video tidak ditemukan di data halaman.",
         debug: {
-          stage: "item_not_found", scopeKeys: scope ? Object.keys(scope) : [],
-          detailKeys: detail ? Object.keys(detail) : [], statusMsg: pick(detail, "statusMsg") || "",
-          statusCode: pick(detail, "statusCode"),
+          stage: "item_not_found", scopeKeys: Object.keys(scope),
+          detailKeys: detail ? Object.keys(detail) : [],
+          itemInfoKeys: pick(detail, "itemInfo") ? Object.keys(pick(detail, "itemInfo")) : [],
+          statusMsg: pick(detail, "statusMsg") || "", statusCode: pick(detail, "statusCode"),
         },
       });
     }
