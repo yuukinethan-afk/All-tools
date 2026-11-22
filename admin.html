@@ -59,6 +59,18 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--p)}
   <div class="hd"><h1>Admin Panel</h1><div class="btns" style="margin:0"><a class="btn g s" href="/" style="text-decoration:none;display:inline-block">Lihat situs</a><button class="btn g s" id="lo">Keluar</button></div></div>
 
   <div class="box">
+    <h2>Ningen Uploader</h2>
+    <p style="color:var(--mut);font-size:12px;margin:0 0 10px">Saklar jarak jauh untuk ekstensi. Mati = ekstensi berhenti patch video &amp; mengubah payload posting di semua browser yang terpasang (video TikTok kembali seperti biasa, tanpa ekstensi).</p>
+    <div class="row" style="align-items:center">
+      <label style="margin:0;display:flex;align-items:center;gap:8px;color:var(--tx)"><input type="checkbox" id="nkOn" style="width:auto" checked> Ekstensi aktif</label>
+    </div>
+    <label>Pesan untuk pengguna (opsional, tampil saat dimatikan)</label>
+    <textarea id="nkMsg" rows="2" maxlength="200" placeholder="Sedang pemeliharaan, coba lagi nanti."></textarea>
+    <div class="btns"><button class="btn" id="nkSave">Simpan</button></div>
+    <div class="msg" id="nkMsgEl"></div>
+  </div>
+
+  <div class="box">
     <h2 id="ft">Tambah tool</h2>
     <label>Judul</label><input id="fn" maxlength="60" placeholder="Nama tool">
     <div id="gu"><label>URL tool</label><input id="fu" type="url" placeholder="https://tool-kamu.vercel.app"></div>
@@ -108,7 +120,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--p)}
 <script>
 var $=function(i){return document.getElementById(i)};
 var list=[],over={},edit=-1,bi=null;
-var BUILTIN=[["am-unlocker","AM Unlocker"],["finder-preset","Finder Preset"],["tt-dl","TikTok Downloader"],["pin-dl","Pinterest Downloader"],["temail","Email Sementara"],["manga-reader","Manga-Reader"],["tt-upload","Upload TikTok (Ningen)"]];
+var BUILTIN=[["am-unlocker","AM Unlocker"],["finder-preset","Finder Preset"],["tt-upload","Upload TikTok (Ningen)"],["tt-dl","TikTok Downloader"],["pin-dl","Pinterest Downloader"],["temail","Email Sementara"],["manga-reader","Manga-Reader"]];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function api(path,opt){
   return fetch(path,Object.assign({credentials:"same-origin",headers:{"Content-Type":"application/json"}},opt)).then(function(r){
@@ -130,7 +142,7 @@ $("lo").onclick=function(){api("/api/login",{method:"DELETE"}).finally(function(
 function openPanel(){
   api("/api/tools").then(function(d){
     list=Array.isArray(d)?d:(d.tools||[]);over=Array.isArray(d)?{}:(d.over||{});
-    view("p");render();resetForm();loadVipKeys()}).catch(function(){view("l")})
+    view("p");render();resetForm();loadVipKeys();loadNingenKill()}).catch(function(){view("l")})
 }
 function render(){
   $("cn").textContent="("+list.length+")";
@@ -259,6 +271,15 @@ $("vipgen").onclick=function(){
 };
 
 // ---- Start ----
+function loadNingenKill(){
+  api("/api/ningen-kill").then(function(j){$("nkOn").checked=j.on!==false;$("nkMsg").value=j.msg||""}).catch(function(){})
+}
+$("nkSave").onclick=function(){
+  $("nkSave").disabled=true;
+  api("/api/ningen-kill",{method:"POST",body:JSON.stringify({on:$("nkOn").checked,msg:$("nkMsg").value})})
+    .then(function(){say("nkMsgEl","Tersimpan ✓","o")}).catch(function(e){say("nkMsgEl",e.message,"e")})
+    .then(function(){$("nkSave").disabled=false})
+};
 api("/api/login").then(function(j){if(j.ok)openPanel();else view("l")}).catch(function(){view("l");say("lm","API tidak tersedia. Pastikan sudah deploy di Vercel.","e")});
 </script>
 </body>
