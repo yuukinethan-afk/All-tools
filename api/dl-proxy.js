@@ -32,9 +32,19 @@ module.exports = async (req, res) => {
   const ct = String((req.query && req.query.ct) || "").trim();
   const isAudio = /audio|mp3/i.test(ct);
   const name = safeName(req.query && req.query.name, isAudio ? "audio.mp3" : "video.mp4");
+  // Cookie dari sesi dl-tiktok.js (kalau ada) — link CDN TikTok sering menolak
+  // request tanpa cookie/Referer/Origin yang sama persis dengan saat link itu diambil.
+  const vc = String((req.query && req.query.vc) || "").slice(0, 2000);
+
+  const reqHeaders = { "User-Agent": UA, Referer: "https://www.tiktok.com/", Origin: "https://www.tiktok.com" };
+  if (vc) reqHeaders.Cookie = vc;
 
   try {
-    const up = await fetch(src, { headers: { "User-Agent": UA, Referer: "https://www.tiktok.com/" } });
+    let up = await fetch(src, { headers: reqHeaders });
+    if (up.status === 403 && vc) {
+      // Coba sekali lagi tanpa cookie, siapa tahu cookie basi justru yang bikin ditolak.
+      up = await fetch(src, { headers: { "User-Agent": UA, Referer: "https://www.tiktok.com/", Origin: "https://www.tiktok.com" } });
+    }
     if (!up.ok || !up.body) return res.status(502).json({ error: "Gagal mengambil file dari sumbernya (HTTP " + up.status + ")." });
 
     res.status(200);
@@ -54,4 +64,3 @@ module.exports = async (req, res) => {
     if (!res.headersSent) res.status(500).json({ error: "Gagal menyalurkan file." });
   }
 };
-                               
