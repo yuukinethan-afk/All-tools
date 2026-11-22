@@ -108,7 +108,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--p)}
 <script>
 var $=function(i){return document.getElementById(i)};
 var list=[],over={},edit=-1,bi=null;
-var BUILTIN=[["am-unlocker","AM Unlocker"],["finder-preset","Finder Preset"],["tt-dl","TikTok Downloader"],["pin-dl","Pinterest Downloader"],["temail","Email Sementara"],["manga-reader"];
+var BUILTIN=[["am-unlocker","AM Unlocker"],["finder-preset","Finder Preset"],["tt-dl","TikTok Downloader"],["pin-dl","Pinterest Downloader"],["temail","Email Sementara"],["manga-reader","Manga-Reader"]];
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function api(path,opt){
   return fetch(path,Object.assign({credentials:"same-origin",headers:{"Content-Type":"application/json"}},opt)).then(function(r){
